@@ -1,0 +1,1716 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Investment Portfolio Tracker</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+      }
+
+      .header {
+        background: linear-gradient(45deg, #4caf50, #45a049);
+        color: white;
+        padding: 30px;
+        text-align: center;
+      }
+
+      .header h1 {
+        font-size: 2.5em;
+        margin-bottom: 10px;
+      }
+
+      .last-updated {
+        opacity: 0.9;
+        font-size: 0.9em;
+      }
+
+      .summary {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        padding: 30px;
+        background: #f8f9fa;
+      }
+
+      .summary-card {
+        background: white;
+        padding: 25px;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        text-align: center;
+      }
+
+      .summary-card h3 {
+        color: #333;
+        margin-bottom: 15px;
+      }
+
+      .summary-card .value {
+        font-size: 2.2em;
+        font-weight: bold;
+        margin-bottom: 5px;
+      }
+
+      .summary-card .gain-loss {
+        font-size: 1.1em;
+        font-weight: 600;
+        margin-bottom: 10px;
+        margin-top: 0px;
+      }
+
+      .summary-card .invested-amount {
+        font-size: 1em;
+        color: #000;
+        margin-top: 10px;
+        font-weight: bold;
+      }
+
+      .positive {
+        color: #4caf50;
+      }
+      .negative {
+        color: #f44336;
+      }
+
+      /* Modal styles */
+      .modal {
+        display: none;
+        position: fixed;
+        z-index: 2000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+      }
+
+      .modal-content {
+        background-color: white;
+        margin: 5% auto;
+        padding: 20px;
+        border-radius: 10px;
+        width: 90%;
+        max-width: 800px;
+        max-height: 80vh;
+        overflow-y: auto;
+        position: relative;
+      }
+
+      .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        border-bottom: 2px solid #eee;
+        padding-bottom: 10px;
+      }
+
+      .close-modal {
+        background: #f44336;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        cursor: pointer;
+        font-size: 18px;
+        line-height: 1;
+      }
+
+      .close-modal:hover {
+        background: #da190b;
+      }
+
+      .transaction-list {
+        display: grid;
+        gap: 15px;
+      }
+
+      .transaction-card {
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 15px;
+        background: #f9f9f9;
+      }
+
+      .transaction-card h4 {
+        margin-bottom: 10px;
+        color: #333;
+      }
+
+      .content {
+        padding: 30px;
+      }
+
+      .section {
+        margin-bottom: 40px;
+      }
+
+      .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+
+      .section h2 {
+        color: #333;
+        font-size: 1.8em;
+      }
+
+      .btn {
+        background: #4caf50;
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 1em;
+        transition: all 0.3s ease;
+      }
+
+      .btn:hover {
+        background: #45a049;
+        transform: translateY(-2px);
+      }
+
+      .btn-danger {
+        background: #f44336;
+      }
+
+      .btn-danger:hover {
+        background: #da190b;
+      }
+
+      .table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      .table th,
+      .table td {
+        padding: 15px;
+        text-align: left;
+        border-bottom: 1px solid #eee;
+      }
+
+      .table th {
+        background: #f8f9fa;
+        font-weight: 600;
+        color: #333;
+      }
+
+      .table tr:hover {
+        background: #f8f9fa;
+      }
+
+      /* Collapsible transaction styles */
+      .arrow-icon {
+        display: inline-block;
+        margin-right: 8px;
+        transition: transform 0.3s ease;
+        font-size: 0.8em;
+        color: #666;
+        cursor: pointer;
+      }
+
+      .arrow-icon:hover {
+        color: #2196f3;
+      }
+
+      .arrow-icon.expanded {
+        transform: rotate(90deg);
+      }
+
+      .asset-name {
+        cursor: pointer;
+        color: #2196f3;
+        text-decoration: none;
+        font-weight: bold;
+      }
+
+      .asset-name:hover {
+        text-decoration: underline;
+      }
+
+      .transaction-details {
+        display: none;
+        background: #f8f9fa;
+        border-left: 3px solid #2196f3;
+      }
+
+      .transaction-details.show {
+        display: table-row;
+      }
+
+      .transaction-details td {
+        padding: 15px !important;
+        border-top: none !important;
+      }
+
+      .transactions-table {
+        width: 100%;
+        margin: 0;
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .transactions-table th,
+      .transactions-table td {
+        padding: 10px;
+        text-align: left;
+        border-bottom: 1px solid #eee;
+        font-size: 0.9em;
+      }
+
+      .transactions-table th {
+        background: #2196f3;
+        color: white;
+        font-weight: 600;
+      }
+
+      .transactions-table tr:nth-child(even) {
+        background: #f9f9f9;
+      }
+
+      /* Action button styles */
+      .action-btn {
+        background: none;
+        border: none;
+        font-size: 1.2em;
+        cursor: pointer;
+        margin: 0 5px;
+        padding: 5px;
+        border-radius: 3px;
+        transition: background-color 0.2s ease;
+      }
+
+      .action-btn:hover {
+        background-color: rgba(0, 0, 0, 0.1);
+      }
+
+      .edit-btn:hover {
+        background-color: rgba(33, 150, 243, 0.1);
+      }
+
+      .delete-btn:hover {
+        background-color: rgba(244, 67, 54, 0.1);
+      }
+
+      .form-container {
+        background: #f8f9fa;
+        padding: 30px;
+        border-radius: 10px;
+        margin-bottom: 30px;
+      }
+
+      .form-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        margin-bottom: 20px;
+      }
+
+      .form-group {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .form-group label {
+        margin-bottom: 5px;
+        font-weight: 500;
+        color: #333;
+      }
+
+      .form-group input {
+        padding: 12px;
+        border: 2px solid #ddd;
+        border-radius: 6px;
+        font-size: 1em;
+        transition: border-color 0.3s ease;
+      }
+
+      .form-group input:focus {
+        outline: none;
+        border-color: #4caf50;
+      }
+
+      .empty-state {
+        text-align: center;
+        padding: 40px;
+        color: #666;
+      }
+
+      .empty-state img {
+        width: 100px;
+        opacity: 0.5;
+        margin-bottom: 20px;
+      }
+
+      @media (max-width: 768px) {
+        .container {
+          margin: 10px;
+          border-radius: 10px;
+        }
+
+        .summary {
+          grid-template-columns: 1fr;
+          padding: 20px;
+        }
+
+        .content {
+          padding: 20px;
+        }
+
+        .table {
+          font-size: 0.9em;
+        }
+
+        .table th,
+        .table td {
+          padding: 10px 8px;
+        }
+      }
+
+      .loading {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border: 3px solid #f3f3f3;
+        border-top: 3px solid #4caf50;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>💰 Investment Portfolio Tracker</h1>
+        <div style="margin-bottom: 10px">
+          <span
+            style="
+              background: rgba(255, 255, 255, 0.2);
+              padding: 8px 16px;
+              border-radius: 20px;
+              font-size: 0.9em;
+            "
+          >
+            🔴 Live Market Data
+          </span>
+        </div>
+        <div class="last-updated" id="lastUpdated">Loading...</div>
+      </div>
+
+      <div class="summary" id="summary">
+        <!-- Summary cards will be populated by JavaScript -->
+      </div>
+
+      <!-- Global Refresh Section -->
+      <div style="text-align: center; padding: 20px; background: #f8f9fa">
+        <button
+          class="btn btn-refresh"
+          onclick="refreshPortfolio()"
+          style="font-size: 1.1em; padding: 15px 30px"
+          title="Refresh all prices and NAV with live market data"
+        >
+          <span id="globalRefreshIcon">🔄</span> Refresh All Prices & NAV
+        </button>
+        <div style="margin-top: 10px; color: #666; font-size: 0.9em">
+          Click to fetch latest market prices and mutual fund NAV
+        </div>
+      </div>
+
+      <div class="content">
+        <!-- Stocks Section -->
+        <div class="section">
+          <div class="section-header">
+            <h2>📈 Stocks</h2>
+            <div>
+              <button class="btn" onclick="toggleStockForm()">Add Stock</button>
+            </div>
+          </div>
+
+          <!-- Add Stock Form -->
+          <div class="form-container" id="stockForm" style="display: none">
+            <h3>Add New Stock</h3>
+            <form onsubmit="addStock(event)">
+              <div class="form-grid">
+                <div class="form-group">
+                  <label for="stockSymbol">Stock Symbol</label>
+                  <input
+                    type="text"
+                    id="stockSymbol"
+                    placeholder="e.g., RELIANCE, TCS, INFY"
+                    required
+                  />
+                  <small style="color: #666; font-size: 0.8em"
+                    >Enter NSE symbol (automatically adds .NS suffix for live
+                    data)</small
+                  >
+                </div>
+                <div class="form-group">
+                  <label for="stockQuantity">Quantity</label>
+                  <input
+                    type="number"
+                    id="stockQuantity"
+                    step="1"
+                    placeholder="10"
+                    required
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="stockPrice">Purchase Price (₹)</label>
+                  <input
+                    type="number"
+                    id="stockPrice"
+                    step="0.01"
+                    placeholder="2500.00"
+                    required
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="stockDate">Purchase Date</label>
+                  <input type="date" id="stockDate" required />
+                </div>
+              </div>
+              <button type="submit" class="btn">Add Stock</button>
+              <button
+                type="button"
+                class="btn btn-danger"
+                onclick="toggleStockForm()"
+              >
+                Cancel
+              </button>
+            </form>
+          </div>
+
+          <div id="stocksTable">
+            <!-- Stocks table will be populated by JavaScript -->
+          </div>
+        </div>
+
+        <!-- Mutual Funds Section -->
+        <div class="section">
+          <div class="section-header">
+            <h2>📊 Mutual Funds</h2>
+            <div>
+              <button class="btn" onclick="toggleMFForm()">
+                Add Mutual Fund
+              </button>
+            </div>
+          </div>
+
+          <!-- Add Mutual Fund Form -->
+          <div class="form-container" id="mfForm" style="display: none">
+            <h3>Add New Mutual Fund</h3>
+            <form onsubmit="addMutualFund(event)">
+              <div class="form-grid">
+                <div class="form-group">
+                  <label for="mfScheme">Scheme Name</label>
+                  <input
+                    type="text"
+                    id="mfScheme"
+                    placeholder="e.g., SBI Bluechip Fund, HDFC Top 100"
+                    required
+                  />
+                  <small style="color: #666; font-size: 0.8em"
+                    >Enter full scheme name for live NAV data</small
+                  >
+                </div>
+                <div class="form-group">
+                  <label for="mfUnits">Units</label>
+                  <input
+                    type="number"
+                    id="mfUnits"
+                    step="0.001"
+                    placeholder="100.500"
+                    required
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="mfNAV">Purchase NAV (₹)</label>
+                  <input
+                    type="number"
+                    id="mfNAV"
+                    step="0.01"
+                    placeholder="50.25"
+                    required
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="mfAmount">Invested Amount (₹)</label>
+                  <input
+                    type="number"
+                    id="mfAmount"
+                    step="0.01"
+                    placeholder="5000.00"
+                    required
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="mfDate">Purchase Date</label>
+                  <input type="date" id="mfDate" required />
+                </div>
+              </div>
+              <button type="submit" class="btn">Add Mutual Fund</button>
+              <button
+                type="button"
+                class="btn btn-danger"
+                onclick="toggleMFForm()"
+              >
+                Cancel
+              </button>
+            </form>
+          </div>
+
+          <div id="mfTable">
+            <!-- Mutual funds table will be populated by JavaScript -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Transaction Modal -->
+    <div id="transactionModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 id="modalTitle">Transactions</h2>
+          <button class="close-modal" onclick="closeTransactionModal()">
+            &times;
+          </button>
+        </div>
+        <div id="modalTransactionList" class="transaction-list">
+          <!-- Transaction details will be populated here -->
+        </div>
+      </div>
+    </div>
+
+    <script>
+      let portfolio = { stocks: [], mutualFunds: [], lastUpdated: null };
+      let consolidatedPortfolio = {
+        stocks: [],
+        mutualFunds: [],
+        lastUpdated: null,
+      };
+
+      // Load portfolio data
+      async function loadPortfolio() {
+        try {
+          // Load both regular and consolidated data
+          const [regularResponse, consolidatedResponse] = await Promise.all([
+            fetch("/api/portfolio"),
+            fetch("/api/portfolio/consolidated"),
+          ]);
+
+          portfolio = await regularResponse.json();
+          consolidatedPortfolio = await consolidatedResponse.json();
+          updateUI();
+        } catch (error) {
+          console.error("Error loading portfolio:", error);
+        }
+      }
+
+      // Update UI with portfolio data
+      function updateUI() {
+        updateSummary();
+        updateStocksTable();
+        updateMutualFundsTable();
+        updateLastUpdated();
+      }
+
+      // Toggle stocks view between consolidated and detailed
+      function toggleStocksView(mode) {
+        stocksViewMode = mode;
+
+        // Update button states
+        document
+          .getElementById("stocksConsolidatedBtn")
+          .classList.toggle("active", mode === "consolidated");
+        document
+          .getElementById("stocksDetailedBtn")
+          .classList.toggle("active", mode === "detailed");
+
+        updateStocksTable();
+      }
+
+      // Toggle mutual funds view between consolidated and detailed
+      function toggleMFView(mode) {
+        mfViewMode = mode;
+
+        // Update button states
+        document
+          .getElementById("mfConsolidatedBtn")
+          .classList.toggle("active", mode === "consolidated");
+        document
+          .getElementById("mfDetailedBtn")
+          .classList.toggle("active", mode === "detailed");
+
+        updateMutualFundsTable();
+      }
+
+      // Update summary cards
+      function updateSummary() {
+        const stocksInvested = calculateStocksInvested() || 0;
+        const stocksCurrentValue = calculateStocksCurrentValue() || 0;
+        const stocksGain = stocksCurrentValue - stocksInvested;
+        const stocksGainPercent =
+          stocksInvested > 0 ? (stocksGain / stocksInvested) * 100 : 0;
+
+        const mfInvested = calculateMutualFundsInvested() || 0;
+        const mfCurrentValue = calculateMutualFundsCurrentValue() || 0;
+        const mfGain = mfCurrentValue - mfInvested;
+        const mfGainPercent = mfInvested > 0 ? (mfGain / mfInvested) * 100 : 0;
+
+        const totalInvested = stocksInvested + mfInvested;
+        const currentValue = stocksCurrentValue + mfCurrentValue;
+        const totalGain = currentValue - totalInvested;
+        const gainPercent =
+          totalInvested > 0 ? (totalGain / totalInvested) * 100 : 0;
+
+        // Ensure all values are numbers
+        const safeStocksInvested = isNaN(stocksInvested) ? 0 : stocksInvested;
+        const safeStocksCurrentValue = isNaN(stocksCurrentValue)
+          ? 0
+          : stocksCurrentValue;
+        const safeStocksGain = isNaN(stocksGain) ? 0 : stocksGain;
+        const safeStocksGainPercent = isNaN(stocksGainPercent)
+          ? 0
+          : stocksGainPercent;
+
+        const safeMfInvested = isNaN(mfInvested) ? 0 : mfInvested;
+        const safeMfCurrentValue = isNaN(mfCurrentValue) ? 0 : mfCurrentValue;
+        const safeMfGain = isNaN(mfGain) ? 0 : mfGain;
+        const safeMfGainPercent = isNaN(mfGainPercent) ? 0 : mfGainPercent;
+
+        const safeTotalInvested = isNaN(totalInvested) ? 0 : totalInvested;
+        const safeCurrentValue = isNaN(currentValue) ? 0 : currentValue;
+        const safeTotalGain = isNaN(totalGain) ? 0 : totalGain;
+        const safeGainPercent = isNaN(gainPercent) ? 0 : gainPercent;
+
+        const summaryHTML = `
+                <div class="summary-card">
+                    <h3>📈 Stocks Investment</h3>
+                    <div class="value">₹${safeStocksCurrentValue.toLocaleString(
+                      "en-IN",
+                      { maximumFractionDigits: 2 }
+                    )}</div>
+                    <div class="gain-loss ${
+                      safeStocksGain >= 0 ? "positive" : "negative"
+                    }">
+                        ${
+                          safeStocksGain >= 0 ? "+" : ""
+                        }₹${safeStocksGain.toLocaleString("en-IN", {
+          maximumFractionDigits: 2,
+        })} (${
+          safeStocksGainPercent >= 0 ? "+" : ""
+        }${safeStocksGainPercent.toFixed(2)}%)
+                    </div>
+                    <div class="invested-amount">Invested: ₹${safeStocksInvested.toLocaleString(
+                      "en-IN",
+                      { maximumFractionDigits: 2 }
+                    )}</div>
+                </div>
+                <div class="summary-card">
+                    <h3>📊 Mutual Funds Investment</h3>
+                    <div class="value">₹${safeMfCurrentValue.toLocaleString(
+                      "en-IN",
+                      {
+                        maximumFractionDigits: 2,
+                      }
+                    )}</div>
+                    <div class="gain-loss ${
+                      safeMfGain >= 0 ? "positive" : "negative"
+                    }">
+                        ${
+                          safeMfGain >= 0 ? "+" : ""
+                        }₹${safeMfGain.toLocaleString("en-IN", {
+          maximumFractionDigits: 2,
+        })} (${safeMfGainPercent >= 0 ? "+" : ""}${safeMfGainPercent.toFixed(
+          2
+        )}%)
+                    </div>
+                    <div class="invested-amount">Invested: ₹${safeMfInvested.toLocaleString(
+                      "en-IN",
+                      {
+                        maximumFractionDigits: 2,
+                      }
+                    )}</div>
+                </div>
+                <div class="summary-card">
+                    <h3>💰 Total Portfolio</h3>
+                    <div class="value">₹${safeCurrentValue.toLocaleString(
+                      "en-IN",
+                      {
+                        maximumFractionDigits: 2,
+                      }
+                    )}</div>
+                    <div class="gain-loss ${
+                      safeTotalGain >= 0 ? "positive" : "negative"
+                    }">
+                        ${
+                          safeTotalGain >= 0 ? "+" : ""
+                        }₹${safeTotalGain.toLocaleString("en-IN", {
+          maximumFractionDigits: 2,
+        })} (${safeGainPercent >= 0 ? "+" : ""}${safeGainPercent.toFixed(2)}%)
+                    </div>
+                    <div class="invested-amount">Invested: ₹${safeTotalInvested.toLocaleString(
+                      "en-IN",
+                      { maximumFractionDigits: 2 }
+                    )}</div>
+                </div>
+                <div class="summary-card">
+                    <h3>📋 Portfolio Summary</h3>
+                    <!-- Updated: Combined display with percentages -->
+                    <div class="value">${
+                      (consolidatedPortfolio && consolidatedPortfolio.stocks
+                        ? consolidatedPortfolio.stocks.length
+                        : 0) +
+                      (consolidatedPortfolio &&
+                      consolidatedPortfolio.mutualFunds
+                        ? consolidatedPortfolio.mutualFunds.length
+                        : 0)
+                    }</div>
+                    <ul style="list-style: none; padding: 0; margin: 10px 0; text-align: left;">
+                        <li style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #f0f0f0;">
+                            <span style="display: flex; align-items: center;">
+                                <span style="width: 8px; height: 8px; background: #2196F3; border-radius: 50%; margin-right: 10px;"></span>
+                                Stocks
+                            </span>
+                            <span style="font-weight: 600; color: #2196F3;">
+                                ${
+                                  consolidatedPortfolio &&
+                                  consolidatedPortfolio.stocks
+                                    ? consolidatedPortfolio.stocks.length
+                                    : 0
+                                } (${
+          consolidatedPortfolio &&
+          consolidatedPortfolio.stocks &&
+          consolidatedPortfolio.mutualFunds
+            ? (
+                (consolidatedPortfolio.stocks.length /
+                  (consolidatedPortfolio.stocks.length +
+                    consolidatedPortfolio.mutualFunds.length)) *
+                100
+              ).toFixed(1)
+            : 0
+        }%)
+                            </span>
+                        </li>
+                        <li style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0;">
+                            <span style="display: flex; align-items: center;">
+                                <span style="width: 8px; height: 8px; background: #FF9800; border-radius: 50%; margin-right: 10px;"></span>
+                                Mutual Funds
+                            </span>
+                            <span style="font-weight: 600; color: #FF9800;">
+                                ${
+                                  consolidatedPortfolio &&
+                                  consolidatedPortfolio.mutualFunds
+                                    ? consolidatedPortfolio.mutualFunds.length
+                                    : 0
+                                } (${
+          consolidatedPortfolio &&
+          consolidatedPortfolio.stocks &&
+          consolidatedPortfolio.mutualFunds
+            ? (
+                (consolidatedPortfolio.mutualFunds.length /
+                  (consolidatedPortfolio.stocks.length +
+                    consolidatedPortfolio.mutualFunds.length)) *
+                100
+              ).toFixed(1)
+            : 0
+        }%)
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+            `;
+        document.getElementById("summary").innerHTML = summaryHTML;
+      }
+
+      // Calculate stocks invested amount (using consolidated data)
+      function calculateStocksInvested() {
+        if (!consolidatedPortfolio || !consolidatedPortfolio.stocks) return 0;
+        return consolidatedPortfolio.stocks.reduce((sum, stock) => {
+          const quantity = isNaN(stock.quantity) ? 0 : stock.quantity;
+          const purchasePrice = isNaN(stock.purchasePrice)
+            ? 0
+            : stock.purchasePrice;
+          return sum + quantity * purchasePrice;
+        }, 0);
+      }
+
+      // Calculate stocks current value (using consolidated data)
+      function calculateStocksCurrentValue() {
+        if (!consolidatedPortfolio || !consolidatedPortfolio.stocks) return 0;
+        return consolidatedPortfolio.stocks.reduce((sum, stock) => {
+          const totalValue = isNaN(stock.totalValue) ? 0 : stock.totalValue;
+          return sum + totalValue;
+        }, 0);
+      }
+
+      // Calculate mutual funds invested amount (using consolidated data)
+      function calculateMutualFundsInvested() {
+        if (!consolidatedPortfolio || !consolidatedPortfolio.mutualFunds)
+          return 0;
+        return consolidatedPortfolio.mutualFunds.reduce((sum, mf) => {
+          const investedAmount = isNaN(mf.investedAmount)
+            ? 0
+            : mf.investedAmount;
+          return sum + investedAmount;
+        }, 0);
+      }
+
+      // Calculate mutual funds current value (using consolidated data)
+      function calculateMutualFundsCurrentValue() {
+        if (!consolidatedPortfolio || !consolidatedPortfolio.mutualFunds)
+          return 0;
+        return consolidatedPortfolio.mutualFunds.reduce((sum, mf) => {
+          const totalValue = isNaN(mf.totalValue) ? 0 : mf.totalValue;
+          return sum + totalValue;
+        }, 0);
+      }
+
+      // Calculate total invested amount (legacy function for compatibility)
+      function calculateTotalInvested() {
+        return calculateStocksInvested() + calculateMutualFundsInvested();
+      }
+
+      // Calculate current portfolio value (legacy function for compatibility)
+      function calculateCurrentValue() {
+        return (
+          calculateStocksCurrentValue() + calculateMutualFundsCurrentValue()
+        );
+      }
+
+      // Update stocks table
+      function updateStocksTable() {
+        const container = document.getElementById("stocksTable");
+
+        if (consolidatedPortfolio.stocks.length === 0) {
+          container.innerHTML = `
+                    <div class="empty-state">
+                        <div style="font-size: 3em;">📈</div>
+                        <h3>No stocks added yet</h3>
+                        <p>Add your first stock to start tracking your portfolio</p>
+                    </div>
+                `;
+          return;
+        }
+
+        const tableHTML = `
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Symbol</th>
+                            <th>Total Quantity</th>
+                            <th>Avg Purchase Price</th>
+                            <th>Current Price</th>
+                            <th>Invested Amount</th>
+                            <th>Total Value</th>
+                            <th>Gain/Loss</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${consolidatedPortfolio.stocks
+                          .map(
+                            (stock, index) => `
+                            <tr class="transaction-row">
+                                <td>
+                                    <span class="arrow-icon" id="arrow-stock-${index}" onclick="toggleTransactions('stock-${index}')">▶</span>
+                                    <span class="asset-name" onclick="toggleTransactions('stock-${index}')">${
+                              stock.symbol
+                            }</span>
+                                </td>
+                                <td>${
+                                  isNaN(stock.quantity) ? 0 : stock.quantity
+                                }</td>
+                                <td>₹${(isNaN(stock.purchasePrice)
+                                  ? 0
+                                  : stock.purchasePrice
+                                ).toFixed(2)}</td>
+                                <td>
+                                    ₹${(isNaN(stock.currentPrice)
+                                      ? 0
+                                      : stock.currentPrice
+                                    ).toFixed(2)}
+                                    ${
+                                      stock.priceError
+                                        ? '<br><small style="color: #ff9800;">⚠️ Live data unavailable</small>'
+                                        : '<br><small style="color: #4CAF50;">🔴 Live</small>'
+                                    }
+                                </td>
+                                <td>₹${(isNaN(stock.investedAmount)
+                                  ? 0
+                                  : stock.investedAmount
+                                ).toLocaleString("en-IN", {
+                                  maximumFractionDigits: 2,
+                                })}</td>
+                                <td>₹${(isNaN(stock.totalValue)
+                                  ? 0
+                                  : stock.totalValue
+                                ).toLocaleString("en-IN", {
+                                  maximumFractionDigits: 2,
+                                })}</td>
+                                <td class="${
+                                  (isNaN(stock.totalGain)
+                                    ? 0
+                                    : stock.totalGain) >= 0
+                                    ? "positive"
+                                    : "negative"
+                                }">
+                                    ₹${(isNaN(stock.totalGain)
+                                      ? 0
+                                      : stock.totalGain
+                                    ).toLocaleString("en-IN", {
+                                      maximumFractionDigits: 2,
+                                    })} (${
+                              (isNaN(stock.gainPercent)
+                                ? 0
+                                : stock.gainPercent) >= 0
+                                ? "+"
+                                : ""
+                            }${(isNaN(stock.gainPercent)
+                              ? 0
+                              : stock.gainPercent
+                            ).toFixed(2)}%)
+                                </td>
+                            </tr>
+                            <tr class="transaction-details" id="details-stock-${index}">
+                                <td colspan="7">
+                                    <div style="padding: 10px;">
+                                        <h4 style="margin-bottom: 15px; color: #2196F3;">Individual Transactions for ${
+                                          stock.symbol
+                                        }</h4>
+                                        <table class="transactions-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Date</th>
+                                                    <th>Quantity</th>
+                                                    <th>Purchase Price</th>
+                                                    <th>Current Value</th>
+                                                    <th>Gain/Loss</th>
+                                                    <th>Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                ${
+                                                  stock.transactions &&
+                                                  stock.transactions.length > 0
+                                                    ? stock.transactions
+                                                        .sort(
+                                                          (a, b) =>
+                                                            new Date(
+                                                              b.purchaseDate
+                                                            ) -
+                                                            new Date(
+                                                              a.purchaseDate
+                                                            )
+                                                        )
+                                                        .map(
+                                                          (txn) => `
+                                                    <tr>
+                                                        <td>${
+                                                          txn.purchaseDate ||
+                                                          "N/A"
+                                                        }</td>
+                                                        <td>${
+                                                          txn.quantity || 0
+                                                        }</td>
+                                                        <td>₹${(
+                                                          txn.purchasePrice || 0
+                                                        ).toFixed(2)}</td>
+                                                        <td>₹${(
+                                                          txn.totalValue || 0
+                                                        ).toLocaleString(
+                                                          "en-IN",
+                                                          {
+                                                            maximumFractionDigits: 2,
+                                                          }
+                                                        )}</td>
+                                                        <td class="${
+                                                          (txn.totalGain ||
+                                                            0) >= 0
+                                                            ? "positive"
+                                                            : "negative"
+                                                        }">
+                                                            ₹${(
+                                                              txn.totalGain || 0
+                                                            ).toLocaleString(
+                                                              "en-IN",
+                                                              {
+                                                                maximumFractionDigits: 2,
+                                                              }
+                                                            )} 
+                                                            (${
+                                                              (txn.gainPercent ||
+                                                                0) >= 0
+                                                                ? "+"
+                                                                : ""
+                                                            }${(
+                                                            txn.gainPercent || 0
+                                                          ).toFixed(2)}%)
+                                                        </td>
+                                                        <td>
+                                                            <button class="action-btn edit-btn" onclick="editStockTransaction('${
+                                                              txn.id
+                                                            }')" title="Edit Transaction">
+                                                                ✏️
+                                                            </button>
+                                                            <button class="action-btn delete-btn" onclick="deleteStockTransaction('${
+                                                              txn.id
+                                                            }')" title="Delete Transaction">
+                                                                🗑️
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                  `
+                                                        )
+                                                        .join("")
+                                                    : '<tr><td colspan="6" style="text-align: center; color: #666;">No transaction details available</td></tr>'
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </td>
+                            </tr>
+                        `
+                          )
+                          .join("")}
+                    </tbody>
+                </table>
+            `;
+        container.innerHTML = tableHTML;
+      }
+
+      // Update mutual funds table
+      function updateMutualFundsTable() {
+        const container = document.getElementById("mfTable");
+
+        if (consolidatedPortfolio.mutualFunds.length === 0) {
+          container.innerHTML = `
+                    <div class="empty-state">
+                        <div style="font-size: 3em;">📊</div>
+                        <h3>No mutual funds added yet</h3>
+                        <p>Add your first mutual fund to start tracking</p>
+                    </div>
+                `;
+          return;
+        }
+
+        const tableHTML = `
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Scheme Name</th>
+                            <th>Total Units</th>
+                            <th>Avg Purchase NAV</th>
+                            <th>Current NAV</th>
+                            <th>Invested Amount</th>
+                            <th>Current Value</th>
+                            <th>Gain/Loss</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${consolidatedPortfolio.mutualFunds
+                          .map(
+                            (mf, index) => `
+                            <tr class="transaction-row">
+                                <td>
+                                    <span class="arrow-icon" id="arrow-mf-${index}" onclick="toggleTransactions('mf-${index}')">▶</span>
+                                    <span class="asset-name" onclick="toggleTransactions('mf-${index}')">${
+                              mf.scheme
+                            }</span>
+                                </td>
+                                <td>${(isNaN(mf.units) ? 0 : mf.units).toFixed(
+                                  3
+                                )}</td>
+                                <td>₹${(isNaN(mf.purchaseNAV)
+                                  ? 0
+                                  : mf.purchaseNAV
+                                ).toFixed(2)}</td>
+                                <td>
+                                    ₹${(isNaN(mf.currentNAV)
+                                      ? 0
+                                      : mf.currentNAV
+                                    ).toFixed(2)}
+                                    ${
+                                      mf.navError
+                                        ? '<br><small style="color: #ff9800;">⚠️ Live data unavailable</small>'
+                                        : '<br><small style="color: #4CAF50;">🔴 Live</small>'
+                                    }
+                                    ${
+                                      mf.navDate
+                                        ? `<br><small style="color: #666;">As of: ${mf.navDate}</small>`
+                                        : ""
+                                    }
+                                </td>
+                                <td>₹${(isNaN(mf.investedAmount)
+                                  ? 0
+                                  : mf.investedAmount
+                                ).toLocaleString("en-IN", {
+                                  maximumFractionDigits: 2,
+                                })}</td>
+                                <td>₹${(isNaN(mf.totalValue)
+                                  ? 0
+                                  : mf.totalValue
+                                ).toLocaleString("en-IN", {
+                                  maximumFractionDigits: 2,
+                                })}</td>
+                                <td class="${
+                                  (isNaN(mf.totalGain) ? 0 : mf.totalGain) >= 0
+                                    ? "positive"
+                                    : "negative"
+                                }">
+                                    ₹${(isNaN(mf.totalGain)
+                                      ? 0
+                                      : mf.totalGain
+                                    ).toLocaleString("en-IN", {
+                                      maximumFractionDigits: 2,
+                                    })} (${
+                              (isNaN(mf.gainPercent) ? 0 : mf.gainPercent) >= 0
+                                ? "+"
+                                : ""
+                            }${(isNaN(mf.gainPercent)
+                              ? 0
+                              : mf.gainPercent
+                            ).toFixed(2)}%)
+                                </td>
+                            </tr>
+                            <tr class="transaction-details" id="details-mf-${index}">
+                                <td colspan="7">
+                                    <div style="padding: 10px;">
+                                        <h4 style="margin-bottom: 15px; color: #2196F3;">Individual Transactions for ${
+                                          mf.scheme
+                                        }</h4>
+                                        <table class="transactions-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Date</th>
+                                                    <th>Units</th>
+                                                    <th>Purchase NAV</th>
+                                                    <th>Current Value</th>
+                                                    <th>Gain/Loss</th>
+                                                    <th>Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                ${
+                                                  mf.transactions &&
+                                                  mf.transactions.length > 0
+                                                    ? mf.transactions
+                                                        .sort(
+                                                          (a, b) =>
+                                                            new Date(
+                                                              b.purchaseDate
+                                                            ) -
+                                                            new Date(
+                                                              a.purchaseDate
+                                                            )
+                                                        )
+                                                        .map(
+                                                          (txn) => `
+                                                    <tr>
+                                                        <td>${
+                                                          txn.purchaseDate ||
+                                                          "N/A"
+                                                        }</td>
+                                                        <td>${(
+                                                          txn.units || 0
+                                                        ).toFixed(3)}</td>
+                                                        <td>₹${(
+                                                          txn.purchaseNAV || 0
+                                                        ).toFixed(2)}</td>
+                                                        <td>₹${(
+                                                          txn.totalValue || 0
+                                                        ).toLocaleString(
+                                                          "en-IN",
+                                                          {
+                                                            maximumFractionDigits: 2,
+                                                          }
+                                                        )}</td>
+                                                        <td class="${
+                                                          (txn.totalGain ||
+                                                            0) >= 0
+                                                            ? "positive"
+                                                            : "negative"
+                                                        }">
+                                                            ₹${(
+                                                              txn.totalGain || 0
+                                                            ).toLocaleString(
+                                                              "en-IN",
+                                                              {
+                                                                maximumFractionDigits: 2,
+                                                              }
+                                                            )} 
+                                                            (${
+                                                              (txn.gainPercent ||
+                                                                0) >= 0
+                                                                ? "+"
+                                                                : ""
+                                                            }${(
+                                                            txn.gainPercent || 0
+                                                          ).toFixed(2)}%)
+                                                        </td>
+                                                        <td>
+                                                            <button class="action-btn edit-btn" onclick="editMutualFundTransaction('${
+                                                              txn.id
+                                                            }')" title="Edit Transaction">
+                                                                ✏️
+                                                            </button>
+                                                            <button class="action-btn delete-btn" onclick="deleteMutualFundTransaction('${
+                                                              txn.id
+                                                            }')" title="Delete Transaction">
+                                                                🗑️
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                  `
+                                                        )
+                                                        .join("")
+                                                    : '<tr><td colspan="6" style="text-align: center; color: #666;">No transaction details available</td></tr>'
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </td>
+                            </tr>
+                        `
+                          )
+                          .join("")}
+                    </tbody>
+                </table>
+            `;
+        container.innerHTML = tableHTML;
+      }
+
+      // Update last updated time
+      function updateLastUpdated() {
+        const lastUpdatedElement = document.getElementById("lastUpdated");
+        if (portfolio.lastUpdated) {
+          const date = new Date(portfolio.lastUpdated);
+          lastUpdatedElement.textContent = `Last refreshed: ${date.toLocaleString(
+            "en-IN"
+          )} • Click refresh for latest prices`;
+        } else {
+          lastUpdatedElement.textContent =
+            "Click refresh button to fetch latest market data";
+        }
+      }
+
+      // Toggle transaction details visibility
+      function toggleTransactions(rowId) {
+        const detailsRow = document.getElementById(`details-${rowId}`);
+        const arrowIcon = document.getElementById(`arrow-${rowId}`);
+
+        if (detailsRow.classList.contains("show")) {
+          detailsRow.classList.remove("show");
+          arrowIcon.classList.remove("expanded");
+        } else {
+          detailsRow.classList.add("show");
+          arrowIcon.classList.add("expanded");
+        }
+      }
+
+      // Toggle stock form
+      function toggleStockForm() {
+        const form = document.getElementById("stockForm");
+        form.style.display = form.style.display === "none" ? "block" : "none";
+        if (form.style.display === "block") {
+          document.getElementById("stockDate").value = new Date()
+            .toISOString()
+            .split("T")[0];
+        }
+      }
+
+      // Toggle mutual fund form
+      function toggleMFForm() {
+        const form = document.getElementById("mfForm");
+        form.style.display = form.style.display === "none" ? "block" : "none";
+        if (form.style.display === "block") {
+          document.getElementById("mfDate").value = new Date()
+            .toISOString()
+            .split("T")[0];
+        }
+      }
+
+      // Add stock
+      async function addStock(event) {
+        event.preventDefault();
+
+        const stockData = {
+          symbol: document.getElementById("stockSymbol").value,
+          quantity: document.getElementById("stockQuantity").value,
+          purchasePrice: document.getElementById("stockPrice").value,
+          purchaseDate: document.getElementById("stockDate").value,
+        };
+
+        try {
+          const response = await fetch("/api/stocks", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(stockData),
+          });
+
+          if (response.ok) {
+            document.getElementById("stockForm").reset();
+            toggleStockForm();
+            loadPortfolio();
+          } else {
+            alert("Error adding stock");
+          }
+        } catch (error) {
+          console.error("Error adding stock:", error);
+          alert("Error adding stock");
+        }
+      }
+
+      // Add mutual fund
+      async function addMutualFund(event) {
+        event.preventDefault();
+
+        const mfData = {
+          scheme: document.getElementById("mfScheme").value,
+          units: document.getElementById("mfUnits").value,
+          purchaseNAV: document.getElementById("mfNAV").value,
+          investedAmount: document.getElementById("mfAmount").value,
+          purchaseDate: document.getElementById("mfDate").value,
+        };
+
+        try {
+          const response = await fetch("/api/mutual-funds", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(mfData),
+          });
+
+          if (response.ok) {
+            document.getElementById("mfForm").reset();
+            toggleMFForm();
+            loadPortfolio();
+          } else {
+            alert("Error adding mutual fund");
+          }
+        } catch (error) {
+          console.error("Error adding mutual fund:", error);
+          alert("Error adding mutual fund");
+        }
+      }
+
+      // Delete stock
+      async function deleteStock(id) {
+        if (!confirm("Are you sure you want to delete this stock?")) return;
+
+        try {
+          const response = await fetch(`/api/stocks/${id}`, {
+            method: "DELETE",
+          });
+          if (response.ok) {
+            loadPortfolio();
+          } else {
+            alert("Error deleting stock");
+          }
+        } catch (error) {
+          console.error("Error deleting stock:", error);
+          alert("Error deleting stock");
+        }
+      }
+
+      // Delete mutual fund
+      async function deleteMutualFund(id) {
+        if (!confirm("Are you sure you want to delete this mutual fund?"))
+          return;
+
+        try {
+          const response = await fetch(`/api/mutual-funds/${id}`, {
+            method: "DELETE",
+          });
+          if (response.ok) {
+            loadPortfolio();
+          } else {
+            alert("Error deleting mutual fund");
+          }
+        } catch (error) {
+          console.error("Error deleting mutual fund:", error);
+          alert("Error deleting mutual fund");
+        }
+      }
+
+      // Open transaction modal
+      function openTransactionModal(identifier, type) {
+        const modal = document.getElementById("transactionModal");
+        const modalTitle = document.getElementById("modalTitle");
+        const modalList = document.getElementById("modalTransactionList");
+
+        let transactions = [];
+        let titleText = "";
+
+        if (type === "stock") {
+          const stock = consolidatedPortfolio.stocks.find(
+            (s) => s.symbol === identifier
+          );
+          if (stock) {
+            transactions = stock.transactions;
+            titleText = `${stock.symbol} - Stock Transactions`;
+          }
+        } else if (type === "mf") {
+          const mf = consolidatedPortfolio.mutualFunds.find(
+            (m) => m.scheme === identifier
+          );
+          if (mf) {
+            transactions = mf.transactions;
+            titleText = `${mf.scheme} - Mutual Fund Transactions`;
+          }
+        }
+
+        modalTitle.textContent = titleText;
+
+        if (transactions.length === 0) {
+          modalList.innerHTML = "<p>No transactions found.</p>";
+        } else {
+          modalList.innerHTML = transactions
+            .map((txn, idx) => {
+              if (type === "stock") {
+                return `
+                            <div class="transaction-card">
+                                <h4>Transaction ${idx + 1} - ${new Date(
+                  txn.purchaseDate
+                ).toLocaleDateString()}</h4>
+                                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-bottom: 15px;">
+                                    <div><strong>Quantity:</strong> ${
+                                      txn.quantity
+                                    }</div>
+                                    <div><strong>Purchase Price:</strong> ₹${txn.purchasePrice.toFixed(
+                                      2
+                                    )}</div>
+                                    <div><strong>Total Investment:</strong> ₹${(
+                                      txn.quantity * txn.purchasePrice
+                                    ).toFixed(2)}</div>
+                                    <div><strong>Current Value:</strong> ₹${txn.totalValue.toFixed(
+                                      2
+                                    )}</div>
+                                    <div><strong>Gain/Loss:</strong> <span class="${
+                                      txn.totalGain >= 0
+                                        ? "positive"
+                                        : "negative"
+                                    }">₹${txn.totalGain.toFixed(
+                  2
+                )} (${txn.gainPercent.toFixed(2)}%)</span></div>
+                                </div>
+                                <button class="btn btn-danger" onclick="deleteStock('${
+                                  txn.id
+                                }'); closeTransactionModal(); loadPortfolio();">Delete Transaction</button>
+                            </div>
+                        `;
+              } else {
+                return `
+                            <div class="transaction-card">
+                                <h4>Transaction ${idx + 1} - ${new Date(
+                  txn.purchaseDate
+                ).toLocaleDateString()}</h4>
+                                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-bottom: 15px;">
+                                    <div><strong>Units:</strong> ${txn.units.toFixed(
+                                      3
+                                    )}</div>
+                                    <div><strong>Purchase NAV:</strong> ₹${txn.purchaseNAV.toFixed(
+                                      2
+                                    )}</div>
+                                    <div><strong>Invested Amount:</strong> ₹${txn.investedAmount.toFixed(
+                                      2
+                                    )}</div>
+                                    <div><strong>Current Value:</strong> ₹${txn.totalValue.toFixed(
+                                      2
+                                    )}</div>
+                                    <div><strong>Gain/Loss:</strong> <span class="${
+                                      txn.totalGain >= 0
+                                        ? "positive"
+                                        : "negative"
+                                    }">₹${txn.totalGain.toFixed(
+                  2
+                )} (${txn.gainPercent.toFixed(2)}%)</span></div>
+                                </div>
+                                <button class="btn btn-danger" onclick="deleteMutualFund('${
+                                  txn.id
+                                }'); closeTransactionModal(); loadPortfolio();">Delete Transaction</button>
+                            </div>
+                        `;
+              }
+            })
+            .join("");
+        }
+
+        modal.style.display = "block";
+      }
+
+      // Close transaction modal
+      function closeTransactionModal() {
+        const modal = document.getElementById("transactionModal");
+        modal.style.display = "none";
+      }
+
+      // Close modal when clicking outside
+      window.onclick = function (event) {
+        const modal = document.getElementById("transactionModal");
+        if (event.target === modal) {
+          closeTransactionModal();
+        }
+      };
+
+      // Refresh portfolio
+      async function refreshPortfolio() {
+        const refreshIcon = document.getElementById("refreshIcon");
+        const refreshIcon2 = document.getElementById("refreshIcon2");
+        const globalRefreshIcon = document.getElementById("globalRefreshIcon");
+
+        // Show loading state for all refresh buttons
+        if (refreshIcon) refreshIcon.innerHTML = '<div class="loading"></div>';
+        if (refreshIcon2)
+          refreshIcon2.innerHTML = '<div class="loading"></div>';
+        if (globalRefreshIcon)
+          globalRefreshIcon.innerHTML = '<div class="loading"></div>';
+
+        try {
+          const response = await fetch("/api/refresh", { method: "POST" });
+          if (response.ok) {
+            // Reload both portfolios after refresh
+            await loadPortfolio();
+
+            // Show success message
+            const message = document.createElement("div");
+            message.style.cssText =
+              "position: fixed; top: 20px; right: 20px; background: #4CAF50; color: white; padding: 15px 20px; border-radius: 8px; z-index: 1000; font-weight: bold;";
+            message.textContent = "✅ Portfolio updated with latest prices!";
+            document.body.appendChild(message);
+            setTimeout(() => message.remove(), 3000);
+          } else {
+            alert("Error refreshing portfolio");
+          }
+        } catch (error) {
+          console.error("Error refreshing portfolio:", error);
+          alert("Error refreshing portfolio");
+        } finally {
+          // Reset all refresh icons
+          if (refreshIcon) refreshIcon.innerHTML = "🔄";
+          if (refreshIcon2) refreshIcon2.innerHTML = "🔄";
+          if (globalRefreshIcon) globalRefreshIcon.innerHTML = "🔄";
+        }
+      }
+
+      // Edit stock transaction
+      function editStockTransaction(transactionId) {
+        alert(
+          `Edit stock transaction functionality coming soon! Transaction ID: ${transactionId}`
+        );
+        // TODO: Implement edit functionality
+        // - Find the transaction in the portfolio data
+        // - Show a modal/form with current values
+        // - Update the transaction and recalculate portfolio
+      }
+
+      // Delete stock transaction
+      async function deleteStockTransaction(transactionId) {
+        if (
+          confirm("Are you sure you want to delete this stock transaction?")
+        ) {
+          try {
+            const response = await fetch(
+              `/api/stocks/transaction/${transactionId}`,
+              {
+                method: "DELETE",
+              }
+            );
+
+            if (response.ok) {
+              await loadPortfolio();
+              alert("Stock transaction deleted successfully!");
+            } else {
+              alert("Error deleting stock transaction");
+            }
+          } catch (error) {
+            console.error("Error deleting stock transaction:", error);
+            alert("Error deleting stock transaction");
+          }
+        }
+      }
+
+      // Edit mutual fund transaction
+      function editMutualFundTransaction(transactionId) {
+        alert(
+          `Edit mutual fund transaction functionality coming soon! Transaction ID: ${transactionId}`
+        );
+        // TODO: Implement edit functionality
+        // - Find the transaction in the portfolio data
+        // - Show a modal/form with current values
+        // - Update the transaction and recalculate portfolio
+      }
+
+      // Delete mutual fund transaction
+      async function deleteMutualFundTransaction(transactionId) {
+        if (
+          confirm(
+            "Are you sure you want to delete this mutual fund transaction?"
+          )
+        ) {
+          try {
+            const response = await fetch(
+              `/api/mutual-funds/transaction/${transactionId}`,
+              {
+                method: "DELETE",
+              }
+            );
+
+            if (response.ok) {
+              await loadPortfolio();
+              alert("Mutual fund transaction deleted successfully!");
+            } else {
+              alert("Error deleting mutual fund transaction");
+            }
+          } catch (error) {
+            console.error("Error deleting mutual fund transaction:", error);
+            alert("Error deleting mutual fund transaction");
+          }
+        }
+      }
+
+      // Initialize app
+      window.addEventListener("load", loadPortfolio);
+    </script>
+  </body>
+</html>
