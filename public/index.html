@@ -219,7 +219,10 @@
       }
 
       /* Touch-friendly interactive elements */
-      input, select, button, textarea {
+      input,
+      select,
+      button,
+      textarea {
         min-height: 44px;
         -webkit-appearance: none;
         appearance: none;
@@ -685,7 +688,7 @@
         }
 
         /* Make sure price columns wrap properly */
-        .table td:nth-child(n+4) {
+        .table td:nth-child(n + 4) {
           white-space: normal;
           word-wrap: break-word;
           min-width: 80px;
@@ -984,16 +987,6 @@
           </div>
           <div>
             <strong style="color: #ff9800">📊 Mutual Fund Data:</strong>
-            <div
-              style="
-                margin-top: 3px;
-                font-size: 0.85em;
-                color: #d32f2f;
-                font-weight: bold;
-              "
-            >
-              **Mutual Fund tracking is available only for India**
-            </div>
             <div style="margin-top: 5px; color: #666">
               <a
                 href="https://mfapi.in"
@@ -1004,6 +997,16 @@
               </a>
               <div style="font-size: 0.8em; margin-top: 2px">
                 Daily NAV updates from Association of Mutual Funds in India
+              </div>
+              <div
+                style="
+                  margin-top: 3px;
+                  font-size: 0.85em;
+                  color: #d32f2f;
+                  font-weight: bold;
+                "
+              >
+                **Mutual Fund tracking is available only for India**
               </div>
             </div>
           </div>
