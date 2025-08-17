@@ -1,23 +1,11 @@
 {
   "stocks": [
     {
-      "id": "1755351466017",
-      "symbol": "JIOFIN",
-      "quantity": 1,
-      "purchasePrice": 320.42,
-      "purchaseDate": "2025-07-17",
-      "currentPrice": 327.4,
-      "change": 6.979999999999961,
-      "changePercent": "2.18",
-      "totalValue": 327.4,
-      "totalGain": 6.979999999999961,
-      "gainPercent": "2.18",
-      "priceError": false,
-      "lastUpdated": "2025-08-16"
-    },
-    {
-      "id": "1755351490270",
-      "symbol": "JIOFIN",
+      "id": "1755407414354",
+      "symbol": "JIOFIN.NS",
+      "originalSymbol": "JIOFIN",
+      "companyName": "Jio Financial Services Limited",
+      "exchange": "NSE",
       "quantity": 1,
       "purchasePrice": 319.07,
       "purchaseDate": "2025-07-18",
@@ -28,42 +16,45 @@
       "totalGain": 8.329999999999984,
       "gainPercent": "2.61",
       "priceError": false,
-      "lastUpdated": "2025-08-16"
+      "lastUpdated": "2025-08-17"
+    },
+    {
+      "id": "1755409889393",
+      "symbol": "JIOFIN.NS",
+      "originalSymbol": "JIOFIN",
+      "companyName": "Jio Financial Services Limited",
+      "exchange": "NSE",
+      "quantity": 1,
+      "purchasePrice": 320.42,
+      "purchaseDate": "2025-07-17",
+      "currentPrice": 327.4,
+      "change": 6.979999999999961,
+      "changePercent": "2.18",
+      "totalValue": 327.4,
+      "totalGain": 6.979999999999961,
+      "gainPercent": "2.18",
+      "priceError": false,
+      "lastUpdated": "2025-08-17"
     }
   ],
   "mutualFunds": [
     {
-      "id": "1755351906147",
-      "scheme": "Nippon India Small Cap Fund Direct Growth",
-      "units": 4.959,
-      "purchaseNAV": 201.66,
+      "id": "1755407508407",
+      "scheme": "JM Flexicap Fund (Direct) Growth Option",
+      "schemeCode": "120492",
+      "units": 8.63,
+      "purchaseNAV": 115.87,
       "investedAmount": 1000,
-      "purchaseDate": "2024-09-05",
-      "currentNAV": 171.88,
-      "change": -29.78,
-      "changePercent": "-14.77",
-      "totalValue": 852.3529199999999,
-      "totalGain": -147.64708000000007,
-      "gainPercent": "-14.76",
-      "navDate": "14-08-2025",
-      "navError": false
-    },
-    {
-      "id": "1755352119586",
-      "scheme": "Nippon India Small Cap Fund Direct Growth",
-      "units": 5.317,
-      "purchaseNAV": 188.07,
-      "investedAmount": 1000,
-      "purchaseDate": "2025-06-05",
-      "currentNAV": 171.88,
-      "change": -16.189999999999998,
-      "changePercent": "-8.61",
-      "totalValue": 913.88596,
-      "totalGain": -86.11404000000005,
-      "gainPercent": "-8.61",
+      "purchaseDate": "2025-01-06",
+      "currentNAV": 108.79,
+      "change": -7.079999999999998,
+      "changePercent": "-6.11",
+      "totalValue": 938.8577000000001,
+      "totalGain": -61.142299999999864,
+      "gainPercent": "-6.11",
       "navDate": "14-08-2025",
       "navError": false
     }
   ],
-  "lastUpdated": "2025-08-16T16:00:19.296Z"
+  "lastUpdated": "2025-08-17T06:41:11.728Z"
 }

@@ -230,6 +230,23 @@
         background: #f8f9fa;
       }
 
+      /* Company name column styling */
+      .table th:first-child,
+      .table td:first-child {
+        min-width: 200px;
+        max-width: 300px;
+      }
+
+      .asset-name {
+        font-weight: 600;
+        color: #2196f3;
+        cursor: pointer;
+      }
+
+      .asset-name:hover {
+        text-decoration: underline;
+      }
+
       /* Collapsible transaction styles */
       .arrow-icon {
         display: inline-block;
@@ -332,16 +349,26 @@
         margin-bottom: 30px;
       }
 
+      .form-container h3 {
+        margin-bottom: 25px;
+        margin-top: 0;
+        color: #333;
+        font-size: 1.5em;
+        font-weight: 600;
+      }
+
       .form-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 15px;
-        margin-bottom: 20px;
+        gap: 20px;
+        margin-bottom: 25px;
       }
 
       .form-group {
         display: flex;
         flex-direction: column;
+        margin-bottom: 15px;
+        position: relative;
       }
 
       .form-group label {
@@ -358,9 +385,133 @@
         transition: border-color 0.3s ease;
       }
 
-      .form-group input:focus {
+      .form-group select {
+        padding: 12px;
+        border: 2px solid #ddd;
+        border-radius: 6px;
+        font-size: 1em;
+        transition: border-color 0.3s ease;
+        background-color: white;
+        cursor: pointer;
+      }
+
+      .form-group input:focus,
+      .form-group select:focus {
         outline: none;
         border-color: #4caf50;
+      }
+
+      /* Date input placeholder styling */
+      input[type="date"] {
+        text-transform: uppercase;
+      }
+
+      /* Search Input with Icon Styles */
+      .input-with-icon {
+        position: relative;
+        display: block;
+        width: 100%;
+      }
+
+      .input-with-icon input {
+        width: 100%;
+        padding-right: 40px;
+      }
+
+      .search-icon {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #666;
+        font-size: 1.1em;
+        pointer-events: none;
+        z-index: 2;
+      }
+
+      .suggestions-dropdown {
+        position: absolute;
+        top: calc(100% + 2px);
+        left: 0;
+        right: 0;
+        background: white;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        max-height: 200px;
+        overflow-y: auto;
+        z-index: 1000;
+        display: none;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        margin-top: 2px;
+      }
+
+      .suggestion-item {
+        padding: 10px 12px;
+        cursor: pointer;
+        border-bottom: 1px solid #f0f0f0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .suggestion-item:hover {
+        background-color: #f8f9fa;
+      }
+
+      .suggestion-item:last-child {
+        border-bottom: none;
+      }
+
+      .suggestion-symbol {
+        font-weight: 600;
+        color: #2196f3;
+      }
+
+      .suggestion-name {
+        color: #666;
+        font-size: 0.9em;
+        margin-left: 8px;
+      }
+
+      .suggestion-exchange {
+        font-size: 0.8em;
+        color: #999;
+        background: #f0f0f0;
+        padding: 2px 6px;
+        border-radius: 3px;
+      }
+
+      .suggestion-item.loading {
+        color: #666;
+        font-style: italic;
+        justify-content: center;
+      }
+
+      .suggestion-item.loading:hover {
+        background-color: transparent;
+        cursor: default;
+      }
+
+      .suggestion-item.no-results {
+        color: #999;
+        font-style: italic;
+        justify-content: center;
+      }
+
+      .suggestion-item.no-results:hover {
+        background-color: transparent;
+        cursor: default;
+      }
+
+      .suggestion-item.error {
+        color: #d32f2f;
+        font-style: italic;
+        justify-content: center;
+      }
+
+      .suggestion-item.error:hover {
+        background-color: transparent;
+        cursor: default;
       }
 
       .empty-state {
@@ -396,7 +547,25 @@
 
         .table th,
         .table td {
-          padding: 10px 8px;
+          padding: 10px 5px;
+        }
+
+        /* Hide less important columns on mobile */
+        .table th:nth-child(2),
+        .table td:nth-child(2) {
+          display: none;
+        }
+
+        .table th:nth-child(3),
+        .table td:nth-child(3) {
+          display: none;
+        }
+
+        /* Make company name column wider on mobile */
+        .table th:first-child,
+        .table td:first-child {
+          min-width: 150px;
+          max-width: 200px;
         }
       }
 
@@ -439,6 +608,71 @@
         <div class="last-updated" id="lastUpdated">Loading...</div>
       </div>
 
+      <!-- Data Sources Section -->
+      <div
+        style="
+          background: #f8f9fa;
+          padding: 20px;
+          border-left: 4px solid #4caf50;
+          margin: 20px;
+          border-radius: 8px;
+        "
+      >
+        <h3 style="margin-bottom: 10px; color: #333; font-size: 1.1em">
+          📊 Data Sources
+        </h3>
+        <div
+          style="
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            font-size: 0.9em;
+          "
+        >
+          <div>
+            <strong style="color: #2196f3">📈 Stock Market Data:</strong>
+            <div style="margin-top: 5px; color: #666">
+              <a
+                href="https://finance.yahoo.com"
+                target="_blank"
+                style="color: #2196f3; text-decoration: none"
+              >
+                🔗 Yahoo Finance
+              </a>
+              <div style="font-size: 0.8em; margin-top: 2px">
+                Real-time prices for global exchanges (NSE, BSE, NASDAQ, NYSE,
+                etc.)
+              </div>
+            </div>
+          </div>
+          <div>
+            <strong style="color: #ff9800">📊 Mutual Fund Data:</strong>
+            <div
+              style="
+                margin-top: 3px;
+                font-size: 0.85em;
+                color: #d32f2f;
+                font-weight: bold;
+              "
+            >
+              **Mutual Fund tracking is only for India**
+            </div>
+            <div style="margin-top: 5px; color: #666">
+              <a
+                href="https://mfapi.in"
+                target="_blank"
+                style="color: #ff9800; text-decoration: none"
+              >
+                🔗 MFAPI.in (AMFI Data)
+              </a>
+              <div style="font-size: 0.8em; margin-top: 2px">
+                Daily NAV updates from Association of Mutual Funds in India
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div class="summary" id="summary">
         <!-- Summary cards will be populated by JavaScript -->
       </div>
@@ -449,12 +683,15 @@
           class="btn btn-refresh"
           onclick="refreshPortfolio()"
           style="font-size: 1.1em; padding: 15px 30px"
-          title="Refresh all prices and NAV with live market data"
+          title="Refresh all prices and NAV with live market data from Yahoo Finance & MFAPI.in"
         >
           <span id="globalRefreshIcon">🔄</span> Refresh All Prices & NAV
         </button>
         <div style="margin-top: 10px; color: #666; font-size: 0.9em">
-          Click to fetch latest market prices and mutual fund NAV
+          Click to fetch latest market prices and mutual fund NAV<br />
+          <small style="color: #888"
+            >Sources: Yahoo Finance (stocks) • MFAPI.in (mutual funds)</small
+          >
         </div>
       </div>
 
@@ -474,17 +711,51 @@
             <form onsubmit="addStock(event)">
               <div class="form-grid">
                 <div class="form-group">
-                  <label for="stockSymbol">Stock Symbol</label>
-                  <input
-                    type="text"
-                    id="stockSymbol"
-                    placeholder="e.g., RELIANCE, TCS, INFY"
+                  <label for="stockExchange">Stock Exchange</label>
+                  <select
+                    id="stockExchange"
                     required
-                  />
-                  <small style="color: #666; font-size: 0.8em"
-                    >Enter NSE symbol (automatically adds .NS suffix for live
-                    data)</small
+                    onchange="updateStockSymbolPlaceholder()"
                   >
+                    <option value="">Select Exchange</option>
+                    <option value="NSE">NSE (India)</option>
+                    <option value="BSE">BSE (India)</option>
+                    <option value="NASDAQ">NASDAQ (US)</option>
+                    <option value="NYSE">NYSE (US)</option>
+                    <option value="LSE">LSE (UK)</option>
+                    <option value="TSE">TSE (Japan)</option>
+                    <option value="SSE">SSE (China)</option>
+                    <option value="ASX">ASX (Australia)</option>
+                    <option value="TSX">TSX (Canada)</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="stockSymbol">Stock Symbol</label>
+                  <div class="input-with-icon">
+                    <input
+                      type="text"
+                      id="stockSymbol"
+                      placeholder="Search Stocks"
+                      required
+                      autocomplete="off"
+                      oninput="searchStocks(this.value)"
+                    />
+                    <span class="search-icon">🔍</span>
+                    <div
+                      id="stockSuggestions"
+                      class="suggestions-dropdown"
+                    ></div>
+                  </div>
+                  <div
+                    id="stockSymbolError"
+                    style="
+                      color: #e74c3c;
+                      font-size: 0.8em;
+                      display: none;
+                      margin-top: 5px;
+                      font-weight: bold;
+                    "
+                  ></div>
                 </div>
                 <div class="form-group">
                   <label for="stockQuantity">Quantity</label>
@@ -545,15 +816,27 @@
               <div class="form-grid">
                 <div class="form-group">
                   <label for="mfScheme">Scheme Name</label>
-                  <input
-                    type="text"
-                    id="mfScheme"
-                    placeholder="e.g., SBI Bluechip Fund, HDFC Top 100"
-                    required
-                  />
-                  <small style="color: #666; font-size: 0.8em"
-                    >Enter full scheme name for live NAV data</small
-                  >
+                  <div class="input-with-icon">
+                    <input
+                      type="text"
+                      id="mfScheme"
+                      placeholder="Search Mutual Funds"
+                      required
+                      oninput="searchMutualFunds(this.value)"
+                    />
+                    <span class="search-icon">🔍</span>
+                    <div id="mfSuggestions" class="suggestions-dropdown"></div>
+                  </div>
+                  <div
+                    id="mfSchemeError"
+                    style="
+                      color: #e74c3c;
+                      font-size: 0.8em;
+                      display: none;
+                      margin-top: 5px;
+                      font-weight: bold;
+                    "
+                  ></div>
                 </div>
                 <div class="form-group">
                   <label for="mfUnits">Units</label>
@@ -623,6 +906,243 @@
       </div>
     </div>
 
+    <!-- Edit Mutual Fund Modal -->
+    <div id="editMutualFundModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Edit Mutual Fund Transaction</h2>
+          <button class="close-modal" onclick="closeEditMutualFundModal()">
+            &times;
+          </button>
+        </div>
+        <div class="form-container">
+          <form onsubmit="updateMutualFundTransaction(event)">
+            <input type="hidden" id="editMfTransactionId" />
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="editMfUnits">Units</label>
+                <input
+                  type="number"
+                  id="editMfUnits"
+                  step="0.001"
+                  placeholder="100.500"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label for="editMfNAV">Purchase NAV (₹)</label>
+                <input
+                  type="number"
+                  id="editMfNAV"
+                  step="0.01"
+                  placeholder="50.25"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label for="editMfAmount">Invested Amount (₹)</label>
+                <input
+                  type="number"
+                  id="editMfAmount"
+                  step="0.01"
+                  placeholder="5000.00"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label for="editMfDate">Purchase Date</label>
+                <input type="date" id="editMfDate" required />
+              </div>
+            </div>
+            <button type="submit" class="btn">Update Transaction</button>
+            <button
+              type="button"
+              class="btn btn-danger"
+              onclick="closeEditMutualFundModal()"
+            >
+              Cancel
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit Stock Modal -->
+    <div id="editStockModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Edit Stock Transaction</h2>
+          <button class="close-modal" onclick="closeEditStockModal()">
+            &times;
+          </button>
+        </div>
+        <div class="form-container">
+          <form onsubmit="updateStockTransaction(event)">
+            <input type="hidden" id="editStockTransactionId" />
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="editStockQuantity">Quantity</label>
+                <input
+                  type="number"
+                  id="editStockQuantity"
+                  step="1"
+                  placeholder="100"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label for="editStockPrice">Purchase Price (₹)</label>
+                <input
+                  type="number"
+                  id="editStockPrice"
+                  step="0.01"
+                  placeholder="2500.75"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label for="editStockDate">Purchase Date</label>
+                <input type="date" id="editStockDate" required />
+              </div>
+            </div>
+            <button type="submit" class="btn">Update Transaction</button>
+            <button
+              type="button"
+              class="btn btn-danger"
+              onclick="closeEditStockModal()"
+            >
+              Cancel
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Footer with detailed data source information -->
+      <div
+        style="
+          background: #263238;
+          color: white;
+          padding: 30px;
+          margin-top: 40px;
+        "
+      >
+        <div style="max-width: 1000px; margin: 0 auto">
+          <h3 style="text-align: center; margin-bottom: 20px; color: #4caf50">
+            📊 Data Sources & APIs
+          </h3>
+
+          <div
+            style="
+              display: grid;
+              grid-template-columns: 1fr 1fr;
+              gap: 30px;
+              margin-bottom: 20px;
+            "
+          >
+            <div
+              style="
+                background: rgba(255, 255, 255, 0.1);
+                padding: 20px;
+                border-radius: 10px;
+              "
+            >
+              <h4 style="color: #64b5f6; margin-bottom: 10px">
+                📈 Stock Market Data
+              </h4>
+              <div style="margin-bottom: 10px">
+                <strong>Primary Source:</strong>
+                <a
+                  href="https://finance.yahoo.com"
+                  target="_blank"
+                  style="color: #81c784"
+                  >Yahoo Finance API</a
+                >
+              </div>
+              <div style="font-size: 0.9em; line-height: 1.4">
+                <div>• Real-time stock prices</div>
+                <div>• Company names and metadata</div>
+                <div>• Global exchanges support</div>
+                <div>
+                  • API:
+                  <code
+                    style="
+                      background: rgba(0, 0, 0, 0.3);
+                      padding: 2px 4px;
+                      border-radius: 3px;
+                    "
+                    >query1.finance.yahoo.com</code
+                  >
+                </div>
+              </div>
+              <div style="margin-top: 10px; font-size: 0.8em; color: #b0bec5">
+                <strong>Supported Exchanges:</strong> NSE, BSE, NASDAQ, NYSE,
+                LSE, TSE, SSE, ASX, TSX
+              </div>
+            </div>
+
+            <div
+              style="
+                background: rgba(255, 255, 255, 0.1);
+                padding: 20px;
+                border-radius: 10px;
+              "
+            >
+              <h4 style="color: #ffb74d; margin-bottom: 10px">
+                📊 Mutual Fund Data
+              </h4>
+              <div style="margin-bottom: 10px">
+                <strong>Primary Source:</strong>
+                <a
+                  href="https://api.mfapi.in"
+                  target="_blank"
+                  style="color: #81c784"
+                  >MFAPI.in</a
+                >
+              </div>
+              <div style="font-size: 0.9em; line-height: 1.4">
+                <div>• Daily NAV updates</div>
+                <div>• AMFI registered schemes</div>
+                <div>• Historical NAV data</div>
+                <div>
+                  • API:
+                  <code
+                    style="
+                      background: rgba(0, 0, 0, 0.3);
+                      padding: 2px 4px;
+                      border-radius: 3px;
+                    "
+                    >api.mfapi.in/mf/{code}</code
+                  >
+                </div>
+              </div>
+              <div style="margin-top: 10px; font-size: 0.8em; color: #b0bec5">
+                <strong>Data Authority:</strong> Association of Mutual Funds in
+                India (AMFI)
+              </div>
+            </div>
+          </div>
+
+          <div
+            style="
+              text-align: center;
+              padding-top: 15px;
+              border-top: 1px solid rgba(255, 255, 255, 0.2);
+            "
+          >
+            <div style="font-size: 0.9em; color: #b0bec5">
+              <div style="margin-bottom: 5px">
+                ⚡ Real-time data updates • 🔒 Secure API connections • 📱
+                Responsive design
+              </div>
+              <div style="font-size: 0.8em">
+                Portfolio data stored locally • Market data refreshed on demand
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <script>
       let portfolio = { stocks: [], mutualFunds: [], lastUpdated: null };
       let consolidatedPortfolio = {
@@ -634,17 +1154,42 @@
       // Load portfolio data
       async function loadPortfolio() {
         try {
+          console.log("Starting to load portfolio...");
           // Load both regular and consolidated data
           const [regularResponse, consolidatedResponse] = await Promise.all([
             fetch("/api/portfolio"),
             fetch("/api/portfolio/consolidated"),
           ]);
 
+          console.log(
+            "API responses received:",
+            regularResponse.status,
+            consolidatedResponse.status
+          );
+
+          if (!regularResponse.ok) {
+            throw new Error(
+              `Regular portfolio API failed: ${regularResponse.status}`
+            );
+          }
+          if (!consolidatedResponse.ok) {
+            throw new Error(
+              `Consolidated portfolio API failed: ${consolidatedResponse.status}`
+            );
+          }
+
           portfolio = await regularResponse.json();
           consolidatedPortfolio = await consolidatedResponse.json();
+          console.log(
+            "Portfolio data loaded:",
+            portfolio,
+            consolidatedPortfolio
+          );
           updateUI();
+          console.log("UI updated successfully");
         } catch (error) {
           console.error("Error loading portfolio:", error);
+          throw error; // Re-throw so the calling function can handle it
         }
       }
 
@@ -823,14 +1368,17 @@
                                 } (${
           consolidatedPortfolio &&
           consolidatedPortfolio.stocks &&
-          consolidatedPortfolio.mutualFunds
+          consolidatedPortfolio.mutualFunds &&
+          consolidatedPortfolio.stocks.length +
+            consolidatedPortfolio.mutualFunds.length >
+            0
             ? (
                 (consolidatedPortfolio.stocks.length /
                   (consolidatedPortfolio.stocks.length +
                     consolidatedPortfolio.mutualFunds.length)) *
                 100
               ).toFixed(1)
-            : 0
+            : "0"
         }%)
                             </span>
                         </li>
@@ -848,14 +1396,17 @@
                                 } (${
           consolidatedPortfolio &&
           consolidatedPortfolio.stocks &&
-          consolidatedPortfolio.mutualFunds
+          consolidatedPortfolio.mutualFunds &&
+          consolidatedPortfolio.stocks.length +
+            consolidatedPortfolio.mutualFunds.length >
+            0
             ? (
                 (consolidatedPortfolio.mutualFunds.length /
                   (consolidatedPortfolio.stocks.length +
                     consolidatedPortfolio.mutualFunds.length)) *
                 100
               ).toFixed(1)
-            : 0
+            : "0"
         }%)
                             </span>
                         </li>
@@ -939,7 +1490,8 @@
                 <table class="table">
                     <thead>
                         <tr>
-                            <th>Symbol</th>
+                            <th>Company Name</th>
+                            <th>Exchange</th>
                             <th>Total Quantity</th>
                             <th>Avg Purchase Price</th>
                             <th>Current Price</th>
@@ -956,9 +1508,12 @@
                                 <td>
                                     <span class="arrow-icon" id="arrow-stock-${index}" onclick="toggleTransactions('stock-${index}')">▶</span>
                                     <span class="asset-name" onclick="toggleTransactions('stock-${index}')">${
+                              stock.companyName ||
+                              stock.originalSymbol ||
                               stock.symbol
                             }</span>
                                 </td>
+                                <td>${stock.exchange || "NSE"}</td>
                                 <td>${
                                   isNaN(stock.quantity) ? 0 : stock.quantity
                                 }</td>
@@ -974,7 +1529,7 @@
                                     ${
                                       stock.priceError
                                         ? '<br><small style="color: #ff9800;">⚠️ Live data unavailable</small>'
-                                        : '<br><small style="color: #4CAF50;">🔴 Live</small>'
+                                        : '<br><small style="color: #4CAF50;" title="Real-time data from Yahoo Finance API">🔴 Live</small>'
                                     }
                                 </td>
                                 <td>₹${(isNaN(stock.investedAmount)
@@ -1014,11 +1569,15 @@
                                 </td>
                             </tr>
                             <tr class="transaction-details" id="details-stock-${index}">
-                                <td colspan="7">
+                                <td colspan="8">
                                     <div style="padding: 10px;">
                                         <h4 style="margin-bottom: 15px; color: #2196F3;">Individual Transactions for ${
+                                          stock.companyName ||
+                                          stock.originalSymbol ||
                                           stock.symbol
-                                        }</h4>
+                                        } (${
+                              stock.originalSymbol || stock.symbol
+                            })</h4>
                                         <table class="transactions-table">
                                             <thead>
                                                 <tr>
@@ -1174,7 +1733,7 @@
                                     ${
                                       mf.navError
                                         ? '<br><small style="color: #ff9800;">⚠️ Live data unavailable</small>'
-                                        : '<br><small style="color: #4CAF50;">🔴 Live</small>'
+                                        : '<br><small style="color: #4CAF50;" title="Daily NAV from AMFI via MFAPI.in">🔴 Live</small>'
                                     }
                                     ${
                                       mf.navDate
@@ -1219,13 +1778,16 @@
                                     <div style="padding: 10px;">
                                         <h4 style="margin-bottom: 15px; color: #2196F3;">Individual Transactions for ${
                                           mf.scheme
-                                        }</h4>
+                                        } ${
+                              mf.schemeCode ? `(${mf.schemeCode})` : ""
+                            }</h4>
                                         <table class="transactions-table">
                                             <thead>
                                                 <tr>
                                                     <th>Date</th>
                                                     <th>Units</th>
                                                     <th>Purchase NAV</th>
+                                                    <th>Purchase Value</th>
                                                     <th>Current Value</th>
                                                     <th>Gain/Loss</th>
                                                     <th>Actions</th>
@@ -1258,6 +1820,15 @@
                                                         <td>₹${(
                                                           txn.purchaseNAV || 0
                                                         ).toFixed(2)}</td>
+                                                        <td>₹${(
+                                                          (txn.units || 0) *
+                                                          (txn.purchaseNAV || 0)
+                                                        ).toLocaleString(
+                                                          "en-IN",
+                                                          {
+                                                            maximumFractionDigits: 2,
+                                                          }
+                                                        )}</td>
                                                         <td>₹${(
                                                           txn.totalValue || 0
                                                         ).toLocaleString(
@@ -1352,59 +1923,617 @@
       // Toggle stock form
       function toggleStockForm() {
         const form = document.getElementById("stockForm");
+        const isHiding = form.style.display === "block";
         form.style.display = form.style.display === "none" ? "block" : "none";
-        if (form.style.display === "block") {
-          document.getElementById("stockDate").value = new Date()
-            .toISOString()
-            .split("T")[0];
+
+        // Reset tracking when hiding form
+        if (isHiding) {
+          stockSelectedFromSuggestion = false;
+          hideFieldError("stockSymbolError");
         }
+        // Remove auto-setting today's date - let user choose
       }
 
       // Toggle mutual fund form
       function toggleMFForm() {
         const form = document.getElementById("mfForm");
+        const isHiding = form.style.display === "block";
         form.style.display = form.style.display === "none" ? "block" : "none";
-        if (form.style.display === "block") {
-          document.getElementById("mfDate").value = new Date()
-            .toISOString()
-            .split("T")[0];
+
+        // Reset tracking when hiding form
+        if (isHiding) {
+          mutualFundSelectedFromSuggestion = false;
+          hideFieldError("mfSchemeError");
+        }
+        // Remove auto-setting today's date - let user choose
+      }
+
+      // Update stock symbol placeholder based on selected exchange
+      function updateStockSymbolPlaceholder() {
+        const exchange = document.getElementById("stockExchange").value;
+        const symbolInput = document.getElementById("stockSymbol");
+
+        const exchangeInfo = {
+          NSE: {
+            currency: "₹",
+          },
+          BSE: {
+            currency: "₹",
+          },
+          NASDAQ: {
+            currency: "$",
+          },
+          NYSE: {
+            currency: "$",
+          },
+          LSE: {
+            currency: "£",
+          },
+          TSE: {
+            currency: "¥",
+          },
+          SSE: {
+            currency: "¥",
+          },
+          ASX: {
+            currency: "A$",
+          },
+          TSX: {
+            currency: "C$",
+          },
+        };
+
+        if (exchange && exchangeInfo[exchange]) {
+          symbolInput.placeholder = "Search Stocks";
+
+          // Clear all input fields when exchange changes
+          symbolInput.value = "";
+          document.getElementById("stockQuantity").value = "";
+          document.getElementById("stockPrice").value = "";
+          document.getElementById("stockDate").value = "";
+
+          // Reset selection tracking and hide error
+          stockSelectedFromSuggestion = false;
+          hideFieldError("stockSymbolError");
+
+          // Hide any open suggestions
+          const suggestionsDiv = document.getElementById("stockSuggestions");
+          if (suggestionsDiv) {
+            suggestionsDiv.style.display = "none";
+          }
+
+          // Update currency symbol in price label
+          const priceLabel = document.querySelector('label[for="stockPrice"]');
+          if (priceLabel) {
+            priceLabel.textContent = `Purchase Price (${exchangeInfo[exchange].currency})`;
+          }
+        } else {
+          symbolInput.placeholder = "Search Stocks";
+
+          // Clear all input fields when no exchange is selected
+          symbolInput.value = "";
+          document.getElementById("stockQuantity").value = "";
+          document.getElementById("stockPrice").value = "";
+          document.getElementById("stockDate").value = "";
+
+          // Reset selection tracking and hide error
+          stockSelectedFromSuggestion = false;
+          hideFieldError("stockSymbolError");
+
+          // Hide any open suggestions
+          const suggestionsDiv = document.getElementById("stockSuggestions");
+          if (suggestionsDiv) {
+            suggestionsDiv.style.display = "none";
+          }
         }
       }
+
+      // Stock search functionality
+      let searchTimeout;
+
+      // Variables to track if user selected from suggestions
+      let stockSelectedFromSuggestion = false;
+      let mutualFundSelectedFromSuggestion = false;
+
+      // Helper functions for error messages
+      function showFieldError(errorElementId, message) {
+        const errorElement = document.getElementById(errorElementId);
+        if (errorElement) {
+          errorElement.textContent = message;
+          errorElement.style.display = "block";
+        }
+      }
+
+      function hideFieldError(errorElementId) {
+        const errorElement = document.getElementById(errorElementId);
+        if (errorElement) {
+          errorElement.style.display = "none";
+        }
+      }
+
+      async function searchStocks(query) {
+        clearTimeout(searchTimeout);
+        const suggestionsDiv = document.getElementById("stockSuggestions");
+        const exchange = document.getElementById("stockExchange").value;
+
+        // Reset selection tracking when user starts typing and hide any error
+        if (query && query.length > 0) {
+          stockSelectedFromSuggestion = false;
+          hideFieldError("stockSymbolError");
+        }
+
+        // Don't show suggestions if no exchange is selected
+        if (!exchange) {
+          suggestionsDiv.style.display = "none";
+          return;
+        }
+
+        if (!query || query.length < 2) {
+          suggestionsDiv.style.display = "none";
+          return;
+        }
+
+        searchTimeout = setTimeout(async () => {
+          try {
+            // Show loading state
+            suggestionsDiv.innerHTML =
+              '<div class="suggestion-item loading">Searching...</div>';
+            suggestionsDiv.style.display = "block";
+
+            // Call the stock search API
+            const response = await fetch(
+              `/api/stock/search?query=${encodeURIComponent(
+                query
+              )}&exchange=${exchange}`
+            );
+
+            if (!response.ok) {
+              throw new Error("Search failed");
+            }
+
+            const stocks = await response.json();
+
+            if (stocks.length > 0) {
+              suggestionsDiv.innerHTML = stocks
+                .map(
+                  (stock) => `
+                <div class="suggestion-item" onclick="selectStock('${
+                  stock.symbol
+                }', '${stock.name.replace(/'/g, "\\'")}')">
+                  <div>
+                    <span class="suggestion-symbol">${stock.symbol}</span>
+                    <span class="suggestion-name">${stock.name}</span>
+                  </div>
+                  <span class="suggestion-exchange">${
+                    exchange || stock.exchange
+                  }</span>
+                </div>
+              `
+                )
+                .join("");
+              suggestionsDiv.style.display = "block";
+            } else {
+              suggestionsDiv.innerHTML =
+                '<div class="suggestion-item no-results">No stocks found</div>';
+              suggestionsDiv.style.display = "block";
+            }
+          } catch (error) {
+            console.error("Stock search error:", error);
+            suggestionsDiv.innerHTML =
+              '<div class="suggestion-item error">Search failed. Please try again.</div>';
+            suggestionsDiv.style.display = "block";
+          }
+        }, 300);
+      }
+
+      function selectStock(symbol, name) {
+        document.getElementById("stockSymbol").value = symbol;
+        document.getElementById("stockSuggestions").style.display = "none";
+
+        // Mark that user selected from suggestion
+        stockSelectedFromSuggestion = true;
+      }
+
+      async function searchStocksEdit(query) {
+        clearTimeout(searchTimeout);
+        const suggestionsDiv = document.getElementById("editStockSuggestions");
+        const exchange = document.getElementById("editStockExchange").value;
+
+        // Don't show suggestions if no exchange is selected
+        if (!exchange) {
+          suggestionsDiv.style.display = "none";
+          return;
+        }
+
+        if (!query || query.length < 2) {
+          suggestionsDiv.style.display = "none";
+          return;
+        }
+
+        searchTimeout = setTimeout(async () => {
+          try {
+            // Show loading state
+            suggestionsDiv.innerHTML =
+              '<div class="suggestion-item loading">Searching...</div>';
+            suggestionsDiv.style.display = "block";
+
+            // Call the stock search API
+            const response = await fetch(
+              `/api/stock/search?query=${encodeURIComponent(
+                query
+              )}&exchange=${exchange}`
+            );
+
+            if (!response.ok) {
+              throw new Error("Search failed");
+            }
+
+            const stocks = await response.json();
+
+            if (stocks.length > 0) {
+              suggestionsDiv.innerHTML = stocks
+                .map(
+                  (stock) => `
+                <div class="suggestion-item" onclick="selectStockEdit('${
+                  stock.symbol
+                }', '${stock.name.replace(/'/g, "\\'")}')">
+                  <div>
+                    <span class="suggestion-symbol">${stock.symbol}</span>
+                    <span class="suggestion-name">${stock.name}</span>
+                  </div>
+                  <span class="suggestion-exchange">${
+                    exchange || stock.exchange
+                  }</span>
+                </div>
+              `
+                )
+                .join("");
+              suggestionsDiv.style.display = "block";
+            } else {
+              suggestionsDiv.innerHTML =
+                '<div class="suggestion-item no-results">No stocks found</div>';
+              suggestionsDiv.style.display = "block";
+            }
+          } catch (error) {
+            console.error("Stock search error:", error);
+            suggestionsDiv.innerHTML =
+              '<div class="suggestion-item error">Search failed. Please try again.</div>';
+            suggestionsDiv.style.display = "block";
+          }
+        }, 300);
+      }
+
+      function selectStockEdit(symbol, name) {
+        document.getElementById("editStockSymbol").value = symbol;
+        document.getElementById("editStockSuggestions").style.display = "none";
+
+        // Update help text with selected stock name
+        const helpText = document.querySelector("#editStockModal .help-text");
+        if (helpText) {
+          helpText.textContent = `Selected: ${name}`;
+        }
+      }
+
+      // Hide suggestions when clicking outside
+      document.addEventListener("click", function (event) {
+        const inputContainer = document.querySelector(".input-with-icon");
+        const suggestionsDiv = document.getElementById("stockSuggestions");
+
+        if (!inputContainer.contains(event.target)) {
+          suggestionsDiv.style.display = "none";
+        }
+      });
+
+      // Mutual Fund search functionality
+      let mfSearchTimeout;
+
+      async function searchMutualFunds(query) {
+        clearTimeout(mfSearchTimeout);
+        const suggestionsDiv = document.getElementById("mfSuggestions");
+
+        // Reset selection tracking when user starts typing and hide any error
+        if (query && query.length > 0) {
+          mutualFundSelectedFromSuggestion = false;
+          hideFieldError("mfSchemeError");
+
+          // Reset all mutual fund fields when scheme name changes
+          document.getElementById("mfNAV").value = "";
+          document.getElementById("mfAmount").value = "";
+          document.getElementById("mfUnits").value = "";
+          document.getElementById("mfDate").value = "";
+        }
+
+        if (!query || query.length < 2) {
+          suggestionsDiv.style.display = "none";
+          return;
+        }
+
+        mfSearchTimeout = setTimeout(async () => {
+          try {
+            // Show loading state
+            suggestionsDiv.innerHTML =
+              '<div class="suggestion-item loading">Searching...</div>';
+            suggestionsDiv.style.display = "block";
+
+            // Call the mutual fund search API
+            const response = await fetch(
+              `/api/mutual-fund/search?query=${encodeURIComponent(query)}`
+            );
+
+            if (!response.ok) {
+              throw new Error("Search failed");
+            }
+
+            const funds = await response.json();
+
+            if (funds.length > 0) {
+              suggestionsDiv.innerHTML = funds
+                .map(
+                  (fund) => `
+                <div class="suggestion-item" onclick="selectMutualFund('${fund.schemeName.replace(
+                  /'/g,
+                  "\\'"
+                )}', '${fund.schemeCode}')">
+                  <div>
+                    <span class="suggestion-symbol">${fund.schemeCode}</span>
+                    <span class="suggestion-name">${fund.schemeName}</span>
+                  </div>
+                  <span class="suggestion-exchange">${fund.fundHouse}</span>
+                </div>
+              `
+                )
+                .join("");
+              suggestionsDiv.style.display = "block";
+            } else {
+              suggestionsDiv.innerHTML =
+                '<div class="suggestion-item no-results">No mutual funds found</div>';
+              suggestionsDiv.style.display = "block";
+            }
+          } catch (error) {
+            console.error("Mutual fund search error:", error);
+            suggestionsDiv.innerHTML =
+              '<div class="suggestion-item error">Search failed. Please try again.</div>';
+            suggestionsDiv.style.display = "block";
+          }
+        }, 300);
+      }
+
+      function selectMutualFund(schemeName, schemeCode) {
+        document.getElementById("mfScheme").value = schemeName;
+        document.getElementById("mfSuggestions").style.display = "none";
+
+        // Mark that user selected from suggestion
+        mutualFundSelectedFromSuggestion = true;
+      }
+
+      async function searchMutualFundsEdit(query) {
+        clearTimeout(mfSearchTimeout);
+        const suggestionsDiv = document.getElementById("editMfSuggestions");
+
+        if (!query || query.length < 2) {
+          suggestionsDiv.style.display = "none";
+          return;
+        }
+
+        mfSearchTimeout = setTimeout(async () => {
+          try {
+            // Show loading state
+            suggestionsDiv.innerHTML =
+              '<div class="suggestion-item loading">Searching...</div>';
+            suggestionsDiv.style.display = "block";
+
+            // Call the mutual fund search API
+            const response = await fetch(
+              `/api/mutual-fund/search?query=${encodeURIComponent(query)}`
+            );
+
+            if (!response.ok) {
+              throw new Error("Search failed");
+            }
+
+            const funds = await response.json();
+
+            if (funds.length > 0) {
+              suggestionsDiv.innerHTML = funds
+                .map(
+                  (fund) => `
+                <div class="suggestion-item" onclick="selectMutualFundEdit('${fund.schemeName.replace(
+                  /'/g,
+                  "\\'"
+                )}', '${fund.schemeCode}')">
+                  <div>
+                    <span class="suggestion-symbol">${fund.schemeCode}</span>
+                    <span class="suggestion-name">${fund.schemeName}</span>
+                  </div>
+                  <span class="suggestion-exchange">${fund.fundHouse}</span>
+                </div>
+              `
+                )
+                .join("");
+              suggestionsDiv.style.display = "block";
+            } else {
+              suggestionsDiv.innerHTML =
+                '<div class="suggestion-item no-results">No mutual funds found</div>';
+              suggestionsDiv.style.display = "block";
+            }
+          } catch (error) {
+            console.error("Mutual fund search error:", error);
+            suggestionsDiv.innerHTML =
+              '<div class="suggestion-item error">Search failed. Please try again.</div>';
+            suggestionsDiv.style.display = "block";
+          }
+        }, 300);
+      }
+
+      function selectMutualFundEdit(schemeName, schemeCode) {
+        document.getElementById("editMfScheme").value = schemeName;
+        document.getElementById("editMfSuggestions").style.display = "none";
+      }
+
+      // Hide MF suggestions when clicking outside
+      document.addEventListener("click", function (event) {
+        const mfInputContainers = document.querySelectorAll(".input-with-icon");
+        const mfSuggestionsDiv = document.getElementById("mfSuggestions");
+        const editMfSuggestionsDiv =
+          document.getElementById("editMfSuggestions");
+
+        let clickedInsideMfInput = false;
+        mfInputContainers.forEach((container) => {
+          if (container.contains(event.target)) {
+            clickedInsideMfInput = true;
+          }
+        });
+
+        if (!clickedInsideMfInput) {
+          if (mfSuggestionsDiv) mfSuggestionsDiv.style.display = "none";
+          if (editMfSuggestionsDiv) editMfSuggestionsDiv.style.display = "none";
+        }
+      });
 
       // Add stock
       async function addStock(event) {
         event.preventDefault();
 
+        const exchange = document.getElementById("stockExchange").value;
+        const symbol = document.getElementById("stockSymbol").value;
+
+        // Validate that user selected from suggestions
+        if (!stockSelectedFromSuggestion) {
+          showFieldError(
+            "stockSymbolError",
+            "Please select a stock from the suggested list. Type to search and click on a suggestion."
+          );
+          document.getElementById("stockSymbol").focus();
+          return;
+        }
+
+        // Hide any existing error message
+        hideFieldError("stockSymbolError");
+
+        // Create the full symbol with exchange suffix
+        let fullSymbol = symbol;
+        switch (exchange) {
+          case "NSE":
+            fullSymbol = symbol + ".NS";
+            break;
+          case "BSE":
+            fullSymbol = symbol + ".BO";
+            break;
+          case "LSE":
+            fullSymbol = symbol + ".L";
+            break;
+          case "TSE":
+            fullSymbol = symbol + ".T";
+            break;
+          case "SSE":
+            fullSymbol = symbol + ".SS";
+            break;
+          case "ASX":
+            fullSymbol = symbol + ".AX";
+            break;
+          case "TSX":
+            fullSymbol = symbol + ".TO";
+            break;
+          // NASDAQ and NYSE don't need suffix
+          case "NASDAQ":
+          case "NYSE":
+          default:
+            fullSymbol = symbol;
+            break;
+        }
+
         const stockData = {
-          symbol: document.getElementById("stockSymbol").value,
+          symbol: fullSymbol,
+          originalSymbol: symbol,
+          exchange: exchange,
           quantity: document.getElementById("stockQuantity").value,
           purchasePrice: document.getElementById("stockPrice").value,
           purchaseDate: document.getElementById("stockDate").value,
         };
 
         try {
-          const response = await fetch("/api/stocks", {
+          const addButton = document.querySelector(
+            '#stockForm button[type="submit"]'
+          );
+          const originalText = addButton.textContent;
+          addButton.innerHTML = '<span class="loading"></span> Adding Stock...';
+          addButton.disabled = true;
+
+          console.log("Sending stock data:", stockData);
+          const response = await fetch("/api/portfolio/stock", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(stockData),
           });
 
+          console.log("Response status:", response.status, response.ok);
+
           if (response.ok) {
-            document.getElementById("stockForm").reset();
+            const result = await response.json();
+            console.log("Stock added successfully:", result);
+            document.querySelector("#stockForm form").reset();
+
+            // Reset tracking variable and hide error
+            stockSelectedFromSuggestion = false;
+            hideFieldError("stockSymbolError");
+
             toggleStockForm();
-            loadPortfolio();
+
+            // Show success message immediately
+            alert(
+              `Stock added successfully: ${
+                result.stock.companyName || result.stock.originalSymbol
+              }`
+            );
+
+            // Try to refresh portfolio, but don't fail if it doesn't work
+            try {
+              console.log("Loading portfolio...");
+              await loadPortfolio();
+              console.log("Portfolio loaded successfully");
+            } catch (loadError) {
+              console.warn(
+                "Portfolio loading failed, but stock was added. Refreshing page...",
+                loadError
+              );
+              // If portfolio loading fails, just reload the page
+              setTimeout(() => {
+                window.location.reload();
+              }, 1000);
+            }
           } else {
-            alert("Error adding stock");
+            const errorText = await response.text();
+            console.error("Server error:", response.status, errorText);
+            alert(`Error adding stock: ${response.status}`);
           }
         } catch (error) {
           console.error("Error adding stock:", error);
-          alert("Error adding stock");
+          alert(`Error adding stock: ${error.message}`);
+        } finally {
+          const addButton = document.querySelector(
+            '#stockForm button[type="submit"]'
+          );
+          addButton.innerHTML = "Add Stock";
+          addButton.disabled = false;
         }
       }
 
       // Add mutual fund
       async function addMutualFund(event) {
         event.preventDefault();
+
+        // Validate that user selected from suggestions
+        if (!mutualFundSelectedFromSuggestion) {
+          showFieldError(
+            "mfSchemeError",
+            "Please select a mutual fund from the suggested list. Type to search and click on a suggestion."
+          );
+          document.getElementById("mfScheme").focus();
+          return;
+        }
+
+        // Hide any existing error message
+        hideFieldError("mfSchemeError");
 
         const mfData = {
           scheme: document.getElementById("mfScheme").value,
@@ -1415,22 +2544,44 @@
         };
 
         try {
-          const response = await fetch("/api/mutual-funds", {
+          const addButton = document.querySelector(
+            '#mfForm button[type="submit"]'
+          );
+          const originalText = addButton.textContent;
+          addButton.innerHTML = '<span class="loading"></span> Adding Fund...';
+          addButton.disabled = true;
+
+          const response = await fetch("/api/portfolio/mutual-fund", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(mfData),
           });
 
           if (response.ok) {
-            document.getElementById("mfForm").reset();
+            const result = await response.json();
+            document.querySelector("#mfForm form").reset();
+
+            // Reset tracking variable and hide error
+            mutualFundSelectedFromSuggestion = false;
+            hideFieldError("mfSchemeError");
+
             toggleMFForm();
             loadPortfolio();
+            alert(
+              `Mutual fund added successfully: ${result.mutualFund.scheme}`
+            );
           } else {
             alert("Error adding mutual fund");
           }
         } catch (error) {
           console.error("Error adding mutual fund:", error);
           alert("Error adding mutual fund");
+        } finally {
+          const addButton = document.querySelector(
+            '#mfForm button[type="submit"]'
+          );
+          addButton.innerHTML = "Add Mutual Fund";
+          addButton.disabled = false;
         }
       }
 
@@ -1587,9 +2738,22 @@
 
       // Close modal when clicking outside
       window.onclick = function (event) {
-        const modal = document.getElementById("transactionModal");
-        if (event.target === modal) {
+        const transactionModal = document.getElementById("transactionModal");
+        const editMutualFundModal = document.getElementById(
+          "editMutualFundModal"
+        );
+        const editStockModal = document.getElementById("editStockModal");
+
+        if (event.target === transactionModal) {
           closeTransactionModal();
+        }
+
+        if (event.target === editMutualFundModal) {
+          closeEditMutualFundModal();
+        }
+
+        if (event.target === editStockModal) {
+          closeEditStockModal();
         }
       };
 
@@ -1634,14 +2798,109 @@
       }
 
       // Edit stock transaction
-      function editStockTransaction(transactionId) {
-        alert(
-          `Edit stock transaction functionality coming soon! Transaction ID: ${transactionId}`
+      async function editStockTransaction(transactionId) {
+        try {
+          // Find the transaction in the portfolio data
+          const transaction = portfolio.stocks.find(
+            (stock) => stock.id === transactionId
+          );
+
+          if (!transaction) {
+            alert("Transaction not found!");
+            return;
+          }
+
+          // Populate the edit form with current values
+          document.getElementById("editStockTransactionId").value =
+            transactionId;
+          document.getElementById("editStockQuantity").value =
+            transaction.quantity;
+          document.getElementById("editStockPrice").value =
+            transaction.purchasePrice;
+          document.getElementById("editStockDate").value =
+            transaction.purchaseDate;
+
+          // Show the edit modal
+          document.getElementById("editStockModal").style.display = "block";
+        } catch (error) {
+          console.error("Error preparing edit form:", error);
+          alert("Error loading transaction data");
+        }
+      }
+
+      // Update stock transaction
+      async function updateStockTransaction(event) {
+        event.preventDefault();
+
+        const transactionId = document.getElementById(
+          "editStockTransactionId"
+        ).value;
+
+        // Find the existing transaction to preserve symbol and exchange
+        const existingTransaction = portfolio.stocks.find(
+          (stock) => stock.id === transactionId
         );
-        // TODO: Implement edit functionality
-        // - Find the transaction in the portfolio data
-        // - Show a modal/form with current values
-        // - Update the transaction and recalculate portfolio
+
+        if (!existingTransaction) {
+          alert("Transaction not found!");
+          return;
+        }
+
+        const quantity = parseInt(
+          document.getElementById("editStockQuantity").value
+        );
+        const purchasePrice = parseFloat(
+          document.getElementById("editStockPrice").value
+        );
+        const purchaseDate = document.getElementById("editStockDate").value;
+
+        try {
+          const response = await fetch(
+            `/api/stocks/transaction/${transactionId}`,
+            {
+              method: "PUT",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                // Preserve original symbol and exchange data
+                symbol: existingTransaction.symbol,
+                originalSymbol: existingTransaction.originalSymbol,
+                exchange: existingTransaction.exchange,
+                // Update only the editable fields
+                quantity,
+                purchasePrice,
+                purchaseDate,
+              }),
+            }
+          );
+
+          if (response.ok) {
+            await loadPortfolio();
+            closeEditStockModal();
+            alert("Stock transaction updated successfully!");
+          } else {
+            const errorData = await response.json();
+            alert(
+              `Error updating transaction: ${
+                errorData.error || "Unknown error"
+              }`
+            );
+          }
+        } catch (error) {
+          console.error("Error updating stock transaction:", error);
+          alert("Error updating stock transaction");
+        }
+      }
+
+      // Close edit stock modal
+      function closeEditStockModal() {
+        document.getElementById("editStockModal").style.display = "none";
+        // Reset form
+        document.getElementById("editStockTransactionId").value = "";
+        document.getElementById("editStockQuantity").value = "";
+        document.getElementById("editStockPrice").value = "";
+        document.getElementById("editStockDate").value = "";
       }
 
       // Delete stock transaction
@@ -1671,14 +2930,110 @@
       }
 
       // Edit mutual fund transaction
-      function editMutualFundTransaction(transactionId) {
-        alert(
-          `Edit mutual fund transaction functionality coming soon! Transaction ID: ${transactionId}`
+      async function editMutualFundTransaction(transactionId) {
+        try {
+          // Find the transaction in the portfolio data
+          const transaction = portfolio.mutualFunds.find(
+            (mf) => mf.id === transactionId
+          );
+
+          if (!transaction) {
+            alert("Transaction not found!");
+            return;
+          }
+
+          // Populate the edit form with current values
+          document.getElementById("editMfTransactionId").value = transactionId;
+          document.getElementById("editMfUnits").value = transaction.units;
+          document.getElementById("editMfNAV").value = transaction.purchaseNAV;
+          document.getElementById("editMfAmount").value =
+            transaction.investedAmount;
+          document.getElementById("editMfDate").value =
+            transaction.purchaseDate;
+
+          // Show the edit modal
+          document.getElementById("editMutualFundModal").style.display =
+            "block";
+        } catch (error) {
+          console.error("Error preparing edit form:", error);
+          alert("Error loading transaction data");
+        }
+      }
+
+      // Update mutual fund transaction
+      async function updateMutualFundTransaction(event) {
+        event.preventDefault();
+
+        const transactionId = document.getElementById(
+          "editMfTransactionId"
+        ).value;
+
+        // Find the existing transaction to preserve scheme data
+        const existingTransaction = portfolio.mutualFunds.find(
+          (mf) => mf.id === transactionId
         );
-        // TODO: Implement edit functionality
-        // - Find the transaction in the portfolio data
-        // - Show a modal/form with current values
-        // - Update the transaction and recalculate portfolio
+
+        if (!existingTransaction) {
+          alert("Transaction not found!");
+          return;
+        }
+
+        const units = parseFloat(document.getElementById("editMfUnits").value);
+        const purchaseNAV = parseFloat(
+          document.getElementById("editMfNAV").value
+        );
+        const investedAmount = parseFloat(
+          document.getElementById("editMfAmount").value
+        );
+        const purchaseDate = document.getElementById("editMfDate").value;
+
+        try {
+          const response = await fetch(
+            `/api/mutual-funds/transaction/${transactionId}`,
+            {
+              method: "PUT",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                // Preserve original scheme data
+                scheme: existingTransaction.scheme,
+                // Update only the editable fields
+                units,
+                purchaseNAV,
+                investedAmount,
+                purchaseDate,
+              }),
+            }
+          );
+
+          if (response.ok) {
+            await loadPortfolio();
+            closeEditMutualFundModal();
+            alert("Mutual fund transaction updated successfully!");
+          } else {
+            const errorData = await response.json();
+            alert(
+              `Error updating transaction: ${
+                errorData.error || "Unknown error"
+              }`
+            );
+          }
+        } catch (error) {
+          console.error("Error updating mutual fund transaction:", error);
+          alert("Error updating mutual fund transaction");
+        }
+      }
+
+      // Close edit mutual fund modal
+      function closeEditMutualFundModal() {
+        document.getElementById("editMutualFundModal").style.display = "none";
+        // Reset form
+        document.getElementById("editMfTransactionId").value = "";
+        document.getElementById("editMfUnits").value = "";
+        document.getElementById("editMfNAV").value = "";
+        document.getElementById("editMfAmount").value = "";
+        document.getElementById("editMfDate").value = "";
       }
 
       // Delete mutual fund transaction
@@ -1710,7 +3065,10 @@
       }
 
       // Initialize app
-      window.addEventListener("load", loadPortfolio);
+      window.addEventListener("load", function () {
+        loadPortfolio();
+        updateStockSymbolPlaceholder(); // Set initial placeholder correctly
+      });
     </script>
   </body>
 </html>
