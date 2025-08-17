@@ -9,7 +9,7 @@ const PORT = 3000;
 
 app.use(cors());
 app.use(express.json());
-app.use(express.static("docs"));
+app.use(express.static(__dirname));
 
 // Helper function to safely convert to number and handle NaN
 function safeNumber(value, defaultValue = 0) {
@@ -267,7 +267,7 @@ function consolidatePortfolio(portfolio) {
 app.get("/api/portfolio", async (req, res) => {
   try {
     const data = await fs.readFile(
-      path.join(__dirname, "data", "portfolio.json"),
+      path.join(__dirname, "portfolio.json"),
       "utf8"
     );
     const portfolio = JSON.parse(data);
@@ -281,7 +281,7 @@ app.get("/api/portfolio", async (req, res) => {
 app.get("/api/portfolio/consolidated", async (req, res) => {
   try {
     const data = await fs.readFile(
-      path.join(__dirname, "data", "portfolio.json"),
+      path.join(__dirname, "portfolio.json"),
       "utf8"
     );
     const portfolio = JSON.parse(data);
@@ -463,7 +463,7 @@ app.post("/api/portfolio/stock", async (req, res) => {
 
     console.log("Reading portfolio file...");
     const data = await fs.readFile(
-      path.join(__dirname, "data", "portfolio.json"),
+      path.join(__dirname, "portfolio.json"),
       "utf8"
     );
     const portfolio = JSON.parse(data);
@@ -492,7 +492,7 @@ app.post("/api/portfolio/stock", async (req, res) => {
 
     console.log("Writing portfolio file...");
     await fs.writeFile(
-      path.join(__dirname, "data", "portfolio.json"),
+      path.join(__dirname, "portfolio.json"),
       JSON.stringify(portfolio, null, 2)
     );
     console.log("Portfolio file written successfully");
@@ -503,7 +503,7 @@ app.post("/api/portfolio/stock", async (req, res) => {
         if (companyName) {
           console.log(`Updating company name for ${symbol} to ${companyName}`);
           // Update the stock with the company name
-          fs.readFile(path.join(__dirname, "data", "portfolio.json"), "utf8")
+          fs.readFile(path.join(__dirname, "portfolio.json"), "utf8")
             .then((data) => {
               const portfolio = JSON.parse(data);
               const stockIndex = portfolio.stocks.findIndex(
@@ -512,7 +512,7 @@ app.post("/api/portfolio/stock", async (req, res) => {
               if (stockIndex !== -1) {
                 portfolio.stocks[stockIndex].companyName = companyName;
                 return fs.writeFile(
-                  path.join(__dirname, "data", "portfolio.json"),
+                  path.join(__dirname, "portfolio.json"),
                   JSON.stringify(portfolio, null, 2)
                 );
               }
@@ -544,7 +544,7 @@ app.post("/api/portfolio/mutual-fund", async (req, res) => {
     }
 
     const data = await fs.readFile(
-      path.join(__dirname, "data", "portfolio.json"),
+      path.join(__dirname, "portfolio.json"),
       "utf8"
     );
     const portfolio = JSON.parse(data);
@@ -569,7 +569,7 @@ app.post("/api/portfolio/mutual-fund", async (req, res) => {
     portfolio.mutualFunds.push(newMF);
 
     await fs.writeFile(
-      path.join(__dirname, "data", "portfolio.json"),
+      path.join(__dirname, "portfolio.json"),
       JSON.stringify(portfolio, null, 2)
     );
     res.json({ message: "Mutual fund added successfully", mutualFund: newMF });
@@ -584,7 +584,7 @@ app.delete("/api/portfolio/transaction/:id", async (req, res) => {
     const { id } = req.params;
 
     const data = await fs.readFile(
-      path.join(__dirname, "data", "portfolio.json"),
+      path.join(__dirname, "portfolio.json"),
       "utf8"
     );
     const portfolio = JSON.parse(data);
@@ -596,7 +596,7 @@ app.delete("/api/portfolio/transaction/:id", async (req, res) => {
     portfolio.mutualFunds = portfolio.mutualFunds.filter((mf) => mf.id !== id);
 
     await fs.writeFile(
-      path.join(__dirname, "data", "portfolio.json"),
+      path.join(__dirname, "portfolio.json"),
       JSON.stringify(portfolio, null, 2)
     );
     res.json({ message: "Transaction deleted successfully" });
@@ -612,7 +612,7 @@ app.post("/api/refresh", async (req, res) => {
     console.log("Refreshing portfolio with latest market data...");
 
     const data = await fs.readFile(
-      path.join(__dirname, "data", "portfolio.json"),
+      path.join(__dirname, "portfolio.json"),
       "utf8"
     );
     const portfolio = JSON.parse(data);
@@ -788,7 +788,7 @@ app.post("/api/refresh", async (req, res) => {
 
     // Save updated portfolio
     await fs.writeFile(
-      path.join(__dirname, "data", "portfolio.json"),
+      path.join(__dirname, "portfolio.json"),
       JSON.stringify(portfolio, null, 2)
     );
 
@@ -821,7 +821,7 @@ app.put("/api/stocks/transaction/:id", async (req, res) => {
     }
 
     const data = await fs.readFile(
-      path.join(__dirname, "data", "portfolio.json"),
+      path.join(__dirname, "portfolio.json"),
       "utf8"
     );
     const portfolio = JSON.parse(data);
@@ -878,7 +878,7 @@ app.put("/api/stocks/transaction/:id", async (req, res) => {
 
     // Save updated portfolio
     await fs.writeFile(
-      path.join(__dirname, "data", "portfolio.json"),
+      path.join(__dirname, "portfolio.json"),
       JSON.stringify(portfolio, null, 2)
     );
 
@@ -895,7 +895,7 @@ app.delete("/api/stocks/transaction/:id", async (req, res) => {
     const transactionId = req.params.id;
 
     const data = await fs.readFile(
-      path.join(__dirname, "data", "portfolio.json"),
+      path.join(__dirname, "portfolio.json"),
       "utf8"
     );
     const portfolio = JSON.parse(data);
@@ -916,7 +916,7 @@ app.delete("/api/stocks/transaction/:id", async (req, res) => {
 
     // Save updated portfolio
     await fs.writeFile(
-      path.join(__dirname, "data", "portfolio.json"),
+      path.join(__dirname, "portfolio.json"),
       JSON.stringify(portfolio, null, 2)
     );
 
@@ -937,7 +937,7 @@ app.put("/api/mutual-funds/transaction/:id", async (req, res) => {
       req.body;
 
     const data = await fs.readFile(
-      path.join(__dirname, "data", "portfolio.json"),
+      path.join(__dirname, "portfolio.json"),
       "utf8"
     );
     const portfolio = JSON.parse(data);
@@ -979,7 +979,7 @@ app.put("/api/mutual-funds/transaction/:id", async (req, res) => {
 
     // Save updated portfolio
     await fs.writeFile(
-      path.join(__dirname, "data", "portfolio.json"),
+      path.join(__dirname, "portfolio.json"),
       JSON.stringify(portfolio, null, 2)
     );
 
@@ -998,7 +998,7 @@ app.delete("/api/mutual-funds/transaction/:id", async (req, res) => {
     const transactionId = req.params.id;
 
     const data = await fs.readFile(
-      path.join(__dirname, "data", "portfolio.json"),
+      path.join(__dirname, "portfolio.json"),
       "utf8"
     );
     const portfolio = JSON.parse(data);
@@ -1021,7 +1021,7 @@ app.delete("/api/mutual-funds/transaction/:id", async (req, res) => {
 
     // Save updated portfolio
     await fs.writeFile(
-      path.join(__dirname, "data", "portfolio.json"),
+      path.join(__dirname, "portfolio.json"),
       JSON.stringify(portfolio, null, 2)
     );
 
@@ -1039,7 +1039,7 @@ app.delete("/api/mutual-funds/transaction/:id", async (req, res) => {
 app.post("/api/update-company-names", async (req, res) => {
   try {
     const data = await fs.readFile(
-      path.join(__dirname, "data", "portfolio.json"),
+      path.join(__dirname, "portfolio.json"),
       "utf8"
     );
     const portfolio = JSON.parse(data);
@@ -1064,7 +1064,7 @@ app.post("/api/update-company-names", async (req, res) => {
     }
 
     await fs.writeFile(
-      path.join(__dirname, "data", "portfolio.json"),
+      path.join(__dirname, "portfolio.json"),
       JSON.stringify(portfolio, null, 2)
     );
 
