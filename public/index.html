@@ -735,7 +735,7 @@
                     <input
                       type="text"
                       id="stockSymbol"
-                      placeholder="Search Stocks"
+                      placeholder="Select exchange first"
                       required
                       autocomplete="off"
                       oninput="searchStocks(this.value)"
@@ -2008,7 +2008,7 @@
             priceLabel.textContent = `Purchase Price (${exchangeInfo[exchange].currency})`;
           }
         } else {
-          symbolInput.placeholder = "Search Stocks";
+          symbolInput.placeholder = "Select exchange first";
 
           // Clear all input fields when no exchange is selected
           symbolInput.value = "";
