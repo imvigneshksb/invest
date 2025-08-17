@@ -9,7 +9,7 @@ const PORT = 3000;
 
 app.use(cors());
 app.use(express.json());
-app.use(express.static("public"));
+app.use(express.static("docs"));
 
 // Helper function to safely convert to number and handle NaN
 function safeNumber(value, defaultValue = 0) {
